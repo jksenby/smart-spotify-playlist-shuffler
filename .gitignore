@@ -25,3 +25,7 @@ frontend/.sass-cache/
 # System files
 frontend/.DS_Store
 frontend/Thumbs.debug
+
+# Environmental Variables
+.env
+frontend/src/environment/environment.development.ts
