@@ -1,0 +1,44 @@
+<div class="container mx-auto p-8 bg-gray-50 min-h-screen font-sans">
+    <div class="max-w-2xl mx-auto bg-white shadow-xl rounded-lg overflow-hidden">
+      
+      <!-- Header -->
+      <div class="header p-6 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-white">🎵 Super Shuffler</h1>
+        <button 
+          (click)="onShuffle()" 
+          [disabled]="loading$ | async"
+          class="shuffle-button text-white font-bold py-2 px-6 rounded-full transition duration-300 transform hover:scale-105 flex items-center shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+          <span *ngIf="(loading$ | async)">Mixing...</span>
+          <span *ngIf="!(loading$ | async)">SHUFFLE</span>
+        </button>
+      </div>
+
+      <!-- Add Form -->
+      <div class="p-6 bg-gray-100 border-b border-gray-200">
+        <div class="flex gap-2">
+          <input [(ngModel)]="newArtist" placeholder="Artist" class="flex-1 p-3 border rounded shadow-sm focus:ring-2 focus:ring-indigo-400 outline-none">
+          <input [(ngModel)]="newTitle" placeholder="Song Title" class="flex-1 p-3 border rounded shadow-sm focus:ring-2 focus:ring-indigo-400 outline-none">
+          <button (click)="onAdd()" class="bg-indigo-500 text-white px-6 rounded hover:bg-indigo-700 font-semibold shadow transition">Add</button>
+        </div>
+      </div>
+
+      <!-- Playlist -->
+      <div class="p-0">
+        <div *ngIf="(tracks$ | async)?.length === 0" class="p-8 text-center text-gray-500">
+          Playlist is empty. Add some tunes!
+        </div>
+
+        <ul class="divide-y divide-gray-100">
+          <li *ngFor="let track of tracks$ | async; let i = index" 
+              class="p-4 hover:bg-indigo-50 transition duration-150 flex items-center group">
+            <div class="text-gray-400 font-mono w-8 text-lg font-bold group-hover:text-indigo-500">{{ i + 1 }}</div>
+            <div class="flex-1">
+              <div class="font-bold text-gray-800">{{ track.title }}</div>
+              <div class="text-sm text-gray-500">{{ track.artist }}</div>
+            </div>
+            <div class="text-xs text-gray-300 font-mono">pos:{{ track.position }}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
