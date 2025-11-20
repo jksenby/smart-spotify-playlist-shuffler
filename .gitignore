@@ -19,7 +19,7 @@ frontend/!.vscode/extensions.json
 frontend/.history/*
 
 # Miscellaneous
-frontend//.angular/cache
+frontend/.angular/cache
 frontend/.sass-cache/
 
 # System files

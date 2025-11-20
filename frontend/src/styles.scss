@@ -1,1 +1,85 @@
-@use "tailwindcss";
+@use '@angular/material' as mat;
+@use 'tailwindcss';
+@use 'themes/variables' as *;
+@use 'themes/theme-colors' as spotify-theme;
+
+$theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: spotify-theme.$primary-palette,
+    tertiary: spotify-theme.$tertiary-palette,
+  ),
+  density: (
+    scale: 0
+  )
+));
+
+html {
+  @include mat.all-component-themes($theme);
+  
+  --mat-sys-primary: #{$spotify-green} !important;
+  --mat-sys-on-primary: #000000 !important;
+
+  --mat-sys-background: #{$spotify-icon-black} !important;
+  --mat-sys-on-background: #{$spotify-white} !important;
+
+  --mat-sys-surface: #{$spotify-black} !important;
+  --mat-sys-surface-container: #{$spotify-black} !important; 
+  --mat-sys-on-surface: #{$spotify-white} !important;
+  
+  --mat-sys-outline: #{$spotify-background} !important;
+  --mat-sys-outline-variant: #2a2a2a !important;
+  --mat-sys-on-surface-variant: #{$spotify-surface} !important;
+}
+
+.mat-mdc-flat-button.mat-primary {
+  background-color: #{$spotify-green} !important;
+  color: #000000 !important;
+  
+  border-radius: 500px !important; 
+  font-weight: 700 !important;
+  letter-spacing: 1.5px !important;
+  text-transform: uppercase !important;
+  height: 48px !important;
+  padding: 0 32px !important;
+}
+
+.mat-mdc-form-field {
+  
+  .mdc-line-ripple { display: none !important; }
+  
+  .mat-mdc-text-field-wrapper {
+    background-color: #{$spotify-background} !important;
+    border-radius: 500px !important; 
+    padding-left: 16px !important;
+  }
+  
+  .mat-mdc-input-element {
+    color: #{$spotify-white} !important;
+    caret-color: #{$spotify-green} !important;
+    font-weight: 500;
+  }
+  
+  .mat-mdc-floating-label {
+    color: #{$spotify-white} !important;
+    font-weight: 500;
+  }
+  
+  .mat-icon {
+    color: #{$spotify-white} !important;
+  }
+}
+
+.mat-mdc-header-cell {
+  color: #{$spotify-surface} !important;
+  font-size: 12px !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase;
+}
+
+body {
+  background-color: #{$spotify-icon-black};
+  color: #{$spotify-white};
+  margin: 0;
+  font-family: 'Circular', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
