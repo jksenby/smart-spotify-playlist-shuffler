@@ -1,1 +1,111 @@
-<p>login works!</p>
+<div class="login-container min-h-screen flex flex-col items-center font-sans text-white">
+      
+    <!-- Header / Logo -->
+    <header class="w-full p-8 flex justify-center items-center bg-black/20 backdrop-blur-sm">
+      <div class="flex items-center gap-2">
+        <!-- Spotify Logo SVG -->
+        <svg viewBox="0 0 167.5 167.5" class="w-10 h-10 text-white fill-current">
+          <path d="M83.7 0C37.5 0 0 37.5 0 83.7c0 46.3 37.5 83.7 83.7 83.7 46.3 0 83.7-37.5 83.7-83.7S130 0 83.7 0zM121.2 120.9c-1.5 2.4-4.5 3.2-6.9 1.7-18.9-11.5-42.7-14.1-70.8-7.7-2.7.6-5.4-1.1-6-3.8-.6-2.7 1.1-5.4 3.8-6 31.1-7.1 57.7-4.1 79.3 9 2.5 1.5 3.2 4.5 1.7 6.8zm9.3-20.7c-1.9 3-5.8 4-8.8 2.1-21.6-13.3-54.5-17.1-80-9.4-3.4 1-7-.9-8-4.3-1-3.4.9-7 4.3-8 29.3-8.9 66.2-4.6 90.5 10.3 2.9 1.9 3.8 5.8 2 9.3zm.8-21.4c-25.9-15.4-68.6-16.8-93.4-9.2-4 .8-8-1.3-8.8-5.3-.8-4 1.3-8 5.3-8.8 29.1-8.8 76.1-7.3 106.3 10.7 3.6 2.1 4.8 6.8 2.7 10.4-2.1 3.6-6.8 4.8-10.4 2.7z"/>
+        </svg>
+        <span class="text-2xl font-bold tracking-tighter">Spotify</span>
+      </div>
+    </header>
+
+    <!-- Main Login Card -->
+    <main class="w-full max-w-[734px] bg-black md:bg-[#121212] md:rounded-lg px-8 py-10 md:px-24 mb-10 mt-4 shadow-2xl">
+      
+      <h1 class="text-3xl md:text-5xl font-bold text-center mb-10 tracking-tighter">Log in to Spotify</h1>
+
+      <!-- Social Logins -->
+      <div class="space-y-3 flex flex-col items-center w-full">
+        
+        <button class="btn-social">
+            <mat-icon class="absolute left-8 text-lg">
+                <img ngSrc="/assets/google-icon.svg" width="24" height="24" alt="google-icon" priority>
+            </mat-icon>
+          <span>Continue with Google</span>
+        </button>
+
+        <button class="btn-social">
+            <mat-icon class="absolute left-8 text-lg">
+                <img ngSrc="/assets/apple-icon.svg" width="24" height="24" alt="google-icon" priority>
+            </mat-icon>
+          <span>Continue with Apple</span>
+        </button>
+      </div>
+
+      <!-- Divider -->
+      <div class="relative flex py-10 items-center w-full md:w-[324px] mx-auto">
+          <div class="flex-grow border-t border-[#292929]"></div>
+          <span class="flex-shrink mx-4 text-[#a7a7a7] text-xs bg-black md:bg-[#121212] px-2 font-bold">OR</span>
+          <div class="flex-grow border-t border-[#292929]"></div>
+      </div>
+
+      <!-- Email Form -->
+      <form class="flex flex-col gap-4 w-full md:w-[324px] mx-auto">
+          <div class="flex flex-col gap-2">
+              <label for="email" class="font-bold text-sm">Email or username</label>
+              <input 
+                  type="text" 
+                  id="email" 
+                  [(ngModel)]="email"
+                  name="email"
+                  class="spotify-input"
+                  placeholder="Email or username"
+              >
+          </div>
+
+          <div class="flex flex-col gap-2">
+              <label for="password" class="font-bold text-sm">Password</label>
+              <div class="relative">
+                  <input 
+                      [type]="hidePassword ? 'password' : 'text'"
+                      id="password" 
+                      [(ngModel)]="password"
+                      name="password"
+                      class="spotify-input"
+                      placeholder="Password"
+                  >
+                  <button type="button" (click)="hidePassword = !hidePassword" class="absolute right-3 top-3 text-[#a7a7a7] hover:text-white">
+                    <mat-icon class="text-xl">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+              </div>
+          </div>
+
+          <!-- Custom Toggle Switch -->
+          <div class="flex items-center gap-3 mt-2">
+               <label class="relative inline-block w-10 h-6 cursor-pointer">
+                  <input type="checkbox" class="peer sr-only" [(ngModel)]="rememberMe" name="rememberMe">
+                  <div class="w-10 h-6 bg-[#727272] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--mat-sys-primary)]"></div>
+              </label>
+              <span class="text-sm text-white hover:underline cursor-pointer">Remember me</span>
+          </div>
+
+          <!-- Submit Button (Using Material Button to get global green pill style) -->
+          <button mat-flat-button color="primary" class="!w-full !py-6 !mt-4 !text-base !text-black">
+              Log In
+          </button>
+
+          <!-- Links -->
+          <div class="text-center mt-4 space-y-2">
+              <a href="#" class="text-sm text-white font-medium underline decoration-transparent hover:decoration-white hover:text-[var(--mat-sys-primary)] transition-colors">Forgot your password?</a>
+          </div>
+      </form>
+      
+      <div class="w-full border-t border-[#292929] my-10 md:w-[400px] mx-auto"></div>
+      
+      <div class="text-center">
+          <p class="text-[#a7a7a7] font-bold mb-4">Don't have an account?</p>
+          <button class="w-full md:w-[324px] py-3 rounded-full border border-[#727272] text-[#a7a7a7] font-bold hover:border-white hover:text-white transition-all uppercase text-sm tracking-widest">
+              Sign up for Spotify
+          </button>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full bg-[#121212] py-8 text-center text-[10px] text-[#a7a7a7]">
+        <p>This site is protected by reCAPTCHA and the Google <a href="#" class="underline hover:text-[#1db954]">Privacy Policy</a> and <a href="#" class="underline hover:text-[#1db954]">Terms of Service</a> apply.</p>
+    </footer>
+
+  </div>
