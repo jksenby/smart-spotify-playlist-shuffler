@@ -30,25 +30,6 @@ export class AuthState {
 
   @Action(AuthActions.Login)
   login(ctx: StateContext<AuthModel>, action: AuthActions.Login) {
-    return this.authService.login(action.payload).pipe(
-      tap((res) => {
-        ctx.patchState({
-          username: res.username,
-          token: res.token,
-        });
-      }),
-    );
-  }
-
-  @Action(AuthActions.Register)
-  register(ctx: StateContext<AuthModel>, action: AuthActions.Register) {
-    return this.authService.login(action.payload).pipe(
-      tap((res) => {
-        ctx.patchState({
-          username: res.username,
-          token: res.token,
-        });
-      }),
-    );
+    return this.authService.login(action.payload);
   }
 }

@@ -13,7 +13,7 @@ export class AuthService {
     return true;
   }
 
-  login(body: UserFormModel): Observable<AuthModel> {
-    return this.http.post<any>('', body);
+  login(body: UserFormModel) {
+    window.location.href = 'http://localhost:8000/auth/login';
   }
 }

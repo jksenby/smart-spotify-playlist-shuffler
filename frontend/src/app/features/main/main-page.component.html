@@ -1,4 +1,15 @@
 <div class="min-h-screen font-sans p-4 md:p-8 bg-(--mat-sys-background)">
+  <div class="avatar mx-auto max-w-max mb-4">
+    <a
+      matFab
+      extended
+      class="bg-(--mat-sys-surface-container-high)! text-white! hover:bg-(--mat-sys-primary)! transition-colors"
+      [routerLink]="['/login']"
+    >
+      Login
+      <mat-icon>login</mat-icon>
+    </a>
+  </div>
   <div
     class="max-w-2xl mx-auto bg-(--mat-sys-surface) rounded-xl shadow-2xl overflow-hidden border border-(--mat-sys-outline)"
   >

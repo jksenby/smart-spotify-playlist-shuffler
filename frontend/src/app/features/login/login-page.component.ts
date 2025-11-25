@@ -20,11 +20,7 @@ export class LoginPageComponent {
 
   onFormSubmit(data: { loginForm: UserFormModel; isRegister: boolean }) {
     const payload = data.loginForm;
-    if (data.isRegister) {
-      this.store.dispatch(new AuthActions.Register(payload));
-    } else {
-      this.store.dispatch(new AuthActions.Login(payload));
-    }
+    this.store.dispatch(new AuthActions.Login(payload)).subscribe((res) => console.log(res));
   }
 
   onSocialLogin(provider: string) {

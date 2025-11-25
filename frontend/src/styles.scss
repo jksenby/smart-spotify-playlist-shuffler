@@ -104,3 +104,19 @@ body {
   margin: 0;
   font-family: 'Circular', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
+mat-icon {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
+$avatar-header-size: 40px !default;
+.avatar-header {
+  height: $avatar-header-size;
+  width: $avatar-header-size;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  object-fit: cover;
+}
