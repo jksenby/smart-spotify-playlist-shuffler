@@ -8,7 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
-  selector: 'app-main',
+  selector: 'app-main-page',
   imports: [
     MatButtonModule,
     MatIconModule,
@@ -17,15 +17,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     FormsModule,
     CommonModule,
   ],
-  templateUrl: './main.html',
-  styleUrl: './main.scss',
+  templateUrl: './main-page.component.html',
+  styleUrl: './main-page.component.scss',
 })
-export class Main {
+export class MainPageComponent {
   public tracks$: Observable<any> | null = null;
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingSubject.asObservable();
   public newArtist: string = '';
   public newTitle: string = '';
+
+  constructor() {}
 
   public onAdd() {}
 

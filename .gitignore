@@ -28,4 +28,4 @@ frontend/Thumbs.debug
 
 # Environmental Variables
 .env
-frontend/src/environment/environment.development.ts
+frontend/src/environments/environment.development.ts

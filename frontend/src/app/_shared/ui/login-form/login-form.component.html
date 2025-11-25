@@ -1,0 +1,149 @@
+<div class="login-container min-h-screen flex flex-col items-center font-sans text-white">
+  <!-- Header -->
+  <header class="w-full p-8 flex justify-center items-center bg-black/20 backdrop-blur-sm">
+    <div class="flex items-center gap-2">
+      <!-- Spotify Logo SVG -->
+      <svg viewBox="0 0 167.5 167.5" class="w-10 h-10 text-white fill-current">
+        <path
+          d="M83.7 0C37.5 0 0 37.5 0 83.7c0 46.3 37.5 83.7 83.7 83.7 46.3 0 83.7-37.5 83.7-83.7S130 0 83.7 0zM121.2 120.9c-1.5 2.4-4.5 3.2-6.9 1.7-18.9-11.5-42.7-14.1-70.8-7.7-2.7.6-5.4-1.1-6-3.8-.6-2.7 1.1-5.4 3.8-6 31.1-7.1 57.7-4.1 79.3 9 2.5 1.5 3.2 4.5 1.7 6.8zm9.3-20.7c-1.9 3-5.8 4-8.8 2.1-21.6-13.3-54.5-17.1-80-9.4-3.4 1-7-.9-8-4.3-1-3.4.9-7 4.3-8 29.3-8.9 66.2-4.6 90.5 10.3 2.9 1.9 3.8 5.8 2 9.3zm.8-21.4c-25.9-15.4-68.6-16.8-93.4-9.2-4 .8-8-1.3-8.8-5.3-.8-4 1.3-8 5.3-8.8 29.1-8.8 76.1-7.3 106.3 10.7 3.6 2.1 4.8 6.8 2.7 10.4-2.1 3.6-6.8 4.8-10.4 2.7z"
+        />
+      </svg>
+      <span class="text-2xl font-bold tracking-tighter">Spotify</span>
+    </div>
+  </header>
+
+  <!-- Main Login Card -->
+  <main
+    class="w-full max-w-[734px] bg-black md:bg-[--sp-color-input-bg] md:rounded-lg px-8 py-5 md:px-24 mb-5 mt-4 shadow-2xl"
+  >
+    <h1 class="text-3xl md:text-5xl font-bold text-center mb-10 tracking-tighter">
+      {{ isRegister ? 'Sign up' : 'Log in to Spotify' }}
+    </h1>
+
+    <!-- Social Logins -->
+    <div class="space-y-3 flex flex-col items-center w-full">
+      <button class="btn-social" (click)="googleLogin.emit()">
+        <mat-icon class="absolute left-8 text-lg">public</mat-icon>
+        <span>Continue with Google</span>
+      </button>
+      <button class="btn-social" (click)="appleLogin.emit()">
+        <mat-icon class="absolute left-8 text-lg">public</mat-icon>
+        <span>Continue with Apple</span>
+      </button>
+    </div>
+
+    <div class="relative flex py-5 items-center w-full md:w-[324px] mx-auto">
+      <div class="flex-grow border-t border-[--sp-color-border-dark]"></div>
+      <span
+        class="flex-shrink mx-4 text-[--sp-color-text-faded] text-xs bg-black md:bg-[--sp-color-input-bg] px-2 font-bold"
+        >OR</span
+      >
+      <div class="flex-grow border-t border-[--sp-color-border-dark]"></div>
+    </div>
+
+    <!-- Form -->
+    <form
+      class="flex flex-col gap-4 w-full md:w-[324px] mx-auto"
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()"
+    >
+      <!-- Error Display -->
+      <div
+        *ngIf="errorMessage"
+        class="bg-red-500/10 border border-red-500 text-red-500 text-sm p-3 rounded text-center"
+      >
+        {{ errorMessage }}
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="email" class="font-bold text-sm">Email or username</label>
+        <input
+          type="text"
+          id="email"
+          formControlName="username"
+          name="email"
+          class="spotify-input"
+          placeholder="Email or username"
+        />
+        <app-required [control]="form.get('username')"></app-required>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="password" class="font-bold text-sm">Password</label>
+        <div class="relative">
+          <input
+            [type]="hidePassword ? 'password' : 'text'"
+            id="password"
+            formControlName="password"
+            name="password"
+            class="spotify-input"
+            placeholder="Password"
+          />
+          <button
+            type="button"
+            (click)="hidePassword = !hidePassword"
+            class="absolute right-3 top-3 text-[--sp-color-text-faded] hover:text-white"
+          >
+            <mat-icon class="text-xl">{{
+              hidePassword ? 'visibility_off' : 'visibility'
+            }}</mat-icon>
+          </button>
+        </div>
+        <app-required [control]="form.get('password')"></app-required>
+      </div>
+
+      <div class="flex items-center gap-3 mt-2">
+        <label class="relative inline-block w-10 h-6 cursor-pointer">
+          <input
+            type="checkbox"
+            class="peer sr-only"
+            [(ngModel)]="rememberMe"
+            [ngModelOptions]="{ standalone: true }"
+            name="rememberMe"
+          />
+          <div
+            class="w-10 h-6 bg-[var(--sp-color-border-medium)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--mat-sys-primary)]"
+          ></div>
+        </label>
+        <span class="text-sm text-white hover:underline cursor-pointer">Remember me</span>
+      </div>
+
+      <button
+        mat-flat-button
+        color="primary"
+        [disabled]="loading"
+        class="!w-full !py-6 !mt-4 !text-base !text-black !rounded-full bg-[--color-spotify-green] hover:bg-[--color-spotify-green-hover] disabled:opacity-50 transition-colors font-bold"
+      >
+        {{ loading ? 'Processing...' : isRegister ? 'Sign Up' : 'Log In' }}
+      </button>
+
+      <div class="text-center space-y-2">
+        <a
+          href="#"
+          class="text-sm text-white font-medium underline decoration-transparent hover:decoration-white hover:text-[--color-spotify-green-hover] transition-colors"
+          >Forgot your password?</a
+        >
+      </div>
+    </form>
+
+    <div class="w-full border-t border-[--sp-color-border-dark] my-5 md:w-[400px] mx-auto"></div>
+
+    <div class="text-center">
+      <p class="text-[--sp-color-text-faded] font-bold mb-4">
+        {{ isRegister ? 'Already have an account?' : "Don't have an account?" }}
+      </p>
+      <button
+        (click)="toggleMode()"
+        class="w-full md:w-[324px] py-3 rounded-full border border-[--sp-color-border-medium] text-[--sp-color-text-faded] font-bold hover:border-white hover:text-white transition-all uppercase text-sm tracking-widest"
+      >
+        {{ isRegister ? 'Log in to Spotify' : 'Sign up for Spotify' }}
+      </button>
+    </div>
+  </main>
+
+  <footer
+    class="w-full bg-[--sp-color-input-bg] py-4 text-center text-[10px] text-[--sp-color-text-faded]"
+  >
+    <p>This site is protected by reCAPTCHA.</p>
+  </footer>
+</div>

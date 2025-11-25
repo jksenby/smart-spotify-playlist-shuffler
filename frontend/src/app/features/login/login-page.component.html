@@ -1,0 +1,7 @@
+<app-login-form
+  [loading]="(loading$ | async)!"
+  [errorMessage]="error$ | async"
+  (formSubmit)="onFormSubmit($event)"
+  (googleLogin)="onSocialLogin('google')"
+  (appleLogin)="onSocialLogin('apple')"
+></app-login-form>

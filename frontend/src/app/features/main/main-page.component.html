@@ -1,12 +1,16 @@
 <div class="min-h-screen font-sans p-4 md:p-8 bg-(--mat-sys-background)">
-  
-  <div class="max-w-2xl mx-auto bg-(--mat-sys-surface) rounded-xl shadow-2xl overflow-hidden border border-(--mat-sys-outline)">
-    
-    <div class="p-6 flex justify-between items-end bg-linear-to-b from-(--mat-sys-surface-container-high) to-(--mat-sys-surface)">
+  <div
+    class="max-w-2xl mx-auto bg-(--mat-sys-surface) rounded-xl shadow-2xl overflow-hidden border border-(--mat-sys-outline)"
+  >
+    <div
+      class="p-6 flex justify-between items-end bg-linear-to-b from-(--mat-sys-surface-container-high) to-(--mat-sys-surface)"
+    >
       <div>
-        <h2 class="text-xs font-bold uppercase tracking-widest text-(--mat-sys-primary) mb-1">Playlist</h2>
+        <h2 class="text-xs font-bold uppercase tracking-widest text-(--mat-sys-primary) mb-1">
+          Playlist
+        </h2>
         <h1 class="text-3xl font-bold text-(--mat-sys-on-surface) flex items-center gap-3">
-          <mat-icon class="scale-125">library_music</mat-icon> 
+          <mat-icon class="scale-125">library_music</mat-icon>
           Super Shuffler
         </h1>
       </div>
@@ -20,12 +24,12 @@
       >
         @if (loading$ | async) {
           <div class="flex items-center gap-2">
-             <mat-icon class="animate-spin">refresh</mat-icon>
-             <span>Mixing...</span>
+            <mat-icon class="animate-spin">refresh</mat-icon>
+            <span>Mixing...</span>
           </div>
         } @else {
           <div class="flex items-center gap-2">
-             <span>SHUFFLE</span>
+            <span>SHUFFLE</span>
           </div>
         }
       </button>
@@ -35,19 +39,21 @@
       <div class="flex flex-col md:flex-row gap-3 items-center">
         <mat-form-field class="w-full md:flex-1 subscript-sizing-dynamic">
           <mat-label>Artist</mat-label>
-          <input matInput [(ngModel)]="newArtist" (keyup.enter)="onAdd()">
-          <mat-icon matPrefix class="mr-2 text-(--mat-sys-on-surface-variant)">record_voice_over</mat-icon>
+          <input matInput [(ngModel)]="newArtist" (keyup.enter)="onAdd()" />
+          <mat-icon matPrefix class="mr-2 text-(--mat-sys-on-surface-variant)"
+            >record_voice_over</mat-icon
+          >
         </mat-form-field>
 
         <mat-form-field class="w-full md:flex-1 subscript-sizing-dynamic">
           <mat-label>Song Title</mat-label>
-          <input matInput [(ngModel)]="newTitle" (keyup.enter)="onAdd()">
+          <input matInput [(ngModel)]="newTitle" (keyup.enter)="onAdd()" />
           <mat-icon matPrefix class="mr-2 text-(--mat-sys-on-surface-variant)">music_note</mat-icon>
         </mat-form-field>
 
-        <button 
-          mat-icon-button 
-          (click)="onAdd()" 
+        <button
+          mat-icon-button
+          (click)="onAdd()"
           class="bg-(--mat-sys-surface-container-high)! text-white! hover:bg-(--mat-sys-primary)! transition-colors"
           matTooltip="Add to playlist"
         >
@@ -57,51 +63,62 @@
     </div>
 
     <div class="pb-6">
-      
       @if ((tracks$ | async)?.length === 0) {
         <div class="py-16 text-center">
-          <mat-icon class="text-6xl text-(--mat-sys-outline) w-16! h-16! mb-4">queue_music</mat-icon>
+          <mat-icon class="text-6xl text-(--mat-sys-outline) w-16! h-16! mb-4"
+            >queue_music</mat-icon
+          >
           <p class="text-(--mat-sys-on-surface-variant)">Playlist is empty. Add some tunes!</p>
         </div>
       }
 
       <div class="flex flex-col">
         @if ((tracks$ | async)?.length !== 0) {
-          <div class="flex px-6 py-2 text-xs uppercase text-(--mat-sys-on-surface-variant) border-b border-(--mat-sys-outline) mb-2">
+          <div
+            class="flex px-6 py-2 text-xs uppercase text-(--mat-sys-on-surface-variant) border-b border-(--mat-sys-outline) mb-2"
+          >
             <div class="w-8 text-center">#</div>
             <div class="flex-1 px-4">Title</div>
             <div class="hidden sm:block w-24 text-right">Pos</div>
           </div>
-         }
+        }
 
         @for (track of tracks$ | async; track track; let i = $index) {
-          <div class="group flex items-center px-4 py-2 mx-2 rounded-md hover:bg-white/5 transition-colors cursor-default">
-            
+          <div
+            class="group flex items-center px-4 py-2 mx-2 rounded-md hover:bg-white/5 transition-colors cursor-default"
+          >
             <div class="w-8 text-center text-(--mat-sys-on-surface-variant) font-mono text-sm">
               <span class="group-hover:hidden">{{ i + 1 }}</span>
-              <mat-icon class="hidden! group-hover:inline-flex! text-(--mat-sys-on-surface)! text-base! align-middle">play_arrow</mat-icon>
+              <mat-icon
+                class="hidden! group-hover:inline-flex! text-(--mat-sys-on-surface)! text-base! align-middle"
+                >play_arrow</mat-icon
+              >
             </div>
 
             <div class="flex-1 px-4 overflow-hidden">
               <div class="font-medium text-(--mat-sys-on-surface) truncate">
                 {{ track.title }}
               </div>
-              <div class="text-sm text-(--mat-sys-on-surface-variant) truncate group-hover:text-white transition-colors">
+              <div
+                class="text-sm text-(--mat-sys-on-surface-variant) truncate group-hover:text-white transition-colors"
+              >
                 {{ track.artist }}
               </div>
             </div>
 
             <div class="hidden sm:block w-24 text-right font-mono text-xs text-(--mat-sys-outline)">
-               {{ track.position }}
+              {{ track.position }}
             </div>
-            
-            <button mat-icon-button class="opacity-0 group-hover:opacity-100 text-(--mat-sys-on-surface-variant)">
-               <mat-icon>more_horiz</mat-icon>
-             </button>
+
+            <button
+              mat-icon-button
+              class="opacity-0 group-hover:opacity-100 text-(--mat-sys-on-surface-variant)"
+            >
+              <mat-icon>more_horiz</mat-icon>
+            </button>
           </div>
         }
       </div>
     </div>
-
   </div>
 </div>

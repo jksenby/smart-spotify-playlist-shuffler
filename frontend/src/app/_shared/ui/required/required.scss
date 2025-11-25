@@ -1,0 +1,7 @@
+@use '../../../../themes/variables' as *;
+
+div {
+  color: $sp-red-error;
+  font-size: small;
+  font-weight: 500;
+}

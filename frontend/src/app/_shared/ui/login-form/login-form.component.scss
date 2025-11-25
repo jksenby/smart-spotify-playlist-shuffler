@@ -1,0 +1,53 @@
+@use '../../../../themes/variables' as *;
+
+.login-container {
+  background: linear-gradient(rgba(255, 255, 255, 0.1) 0%, rgb(0, 0, 0) 100%);
+  background-color: $sp-icon-black;
+}
+
+.spotify-input {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: $sp-icon-black;
+  border: 1px solid $sp-border-medium;
+  border-radius: 4px;
+  color: $sp-white;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.spotify-input:hover {
+  border-color: $sp-white;
+}
+
+.spotify-input:focus {
+  border-color: $sp-green;
+  box-shadow: 0 0 0 1px $sp-green;
+}
+
+.btn-social {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem;
+  background-color: transparent;
+  border: 1px solid $sp-border-medium;
+  border-radius: 500px;
+  color: $sp-white;
+  font-weight: 700;
+  font-size: 0.875rem;
+  position: relative;
+  transition: all 0.2s;
+}
+
+@media (min-width: 768px) {
+  .btn-social {
+    width: 324px;
+    font-size: 1rem;
+  }
+}
+
+.btn-social:hover {
+  border-color: $sp-white;
+}

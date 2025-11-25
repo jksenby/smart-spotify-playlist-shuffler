@@ -7,6 +7,4 @@ import { environment } from '@env/environment.development';
 })
 export class SporifyService {
   constructor(private http: HttpClient) {}
-  
- 
 }

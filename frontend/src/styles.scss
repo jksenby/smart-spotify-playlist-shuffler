@@ -3,40 +3,60 @@
 @use 'themes/variables' as *;
 @use 'themes/theme-colors' as spotify-theme;
 
-$theme: mat.define-theme((
-  color: (
-    theme-type: dark,
-    primary: spotify-theme.$primary-palette,
-    tertiary: spotify-theme.$tertiary-palette,
-  ),
-  density: (
-    scale: 0
+:root {
+  --sp-color-green: #{$sp-green};
+  --sp-color-green-hover: #{$sp-green-hover};
+  --sp-color-white: #{$sp-white};
+  --sp-color-black: #{$sp-black};
+
+  --sp-color-dark-bg: #{$sp-icon-black};
+  --sp-color-header-bg: rgba(0, 0, 0, 0.2);
+  --sp-color-input-bg: #{$sp-icon-black};
+
+  --sp-color-text-faded: #{$sp-text-faded};
+  --sp-color-border-dark: #{$sp-border-dark};
+  --sp-color-border-medium: #{$sp-border-medium};
+
+  --sp-color-error-text: #ef4444;
+  --sp-color-error-bg: rgba(239, 68, 68, 0.1);
+}
+
+$theme: mat.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: spotify-theme.$primary-palette,
+      tertiary: spotify-theme.$tertiary-palette,
+    ),
+    density: (
+      scale: 0,
+    ),
   )
-));
+);
 
 html {
   @include mat.all-component-themes($theme);
-  
-  --mat-sys-primary: #{$spotify-green} !important;
+
+  --mat-sys-primary: #{$sp-green} !important;
   --mat-sys-on-primary: #000000 !important;
 
-  --mat-sys-background: #{$spotify-icon-black} !important;
-  --mat-sys-on-background: #{$spotify-white} !important;
+  --mat-sys-background: #{$sp-icon-black} !important;
+  --mat-sys-on-background: #{$sp-white} !important;
 
-  --mat-sys-surface: #{$spotify-black} !important;
-  --mat-sys-surface-container: #{$spotify-black} !important; 
-  --mat-sys-on-surface: #{$spotify-white} !important;
-  
-  --mat-sys-outline: #{$spotify-background} !important;
+  --mat-sys-surface: #{$sp-black} !important;
+  --mat-sys-surface-container: #{$sp-black} !important;
+  --mat-sys-on-surface: #{$sp-white} !important;
+
+  --mat-sys-outline: #{$sp-background} !important;
   --mat-sys-outline-variant: #2a2a2a !important;
-  --mat-sys-on-surface-variant: #{$spotify-surface} !important;
+  --mat-sys-on-surface-variant: #{$sp-surface} !important;
 }
 
 .mat-mdc-flat-button.mat-primary {
-  background-color: #{$spotify-green} !important;
+  background-color: #{$sp-green} !important;
   color: #000000 !important;
-  
-  border-radius: 500px !important; 
+
+  border-radius: 500px !important;
   font-weight: 700 !important;
   letter-spacing: 1.5px !important;
   text-transform: uppercase !important;
@@ -45,41 +65,42 @@ html {
 }
 
 .mat-mdc-form-field {
-  
-  .mdc-line-ripple { display: none !important; }
-  
+  .mdc-line-ripple {
+    display: none !important;
+  }
+
   .mat-mdc-text-field-wrapper {
-    background-color: #{$spotify-background} !important;
-    border-radius: 500px !important; 
+    background-color: #{$sp-background} !important;
+    border-radius: 500px !important;
     padding-left: 16px !important;
   }
-  
+
   .mat-mdc-input-element {
-    color: #{$spotify-white} !important;
-    caret-color: #{$spotify-green} !important;
+    color: #{$sp-white} !important;
+    caret-color: #{$sp-green} !important;
     font-weight: 500;
   }
-  
+
   .mat-mdc-floating-label {
-    color: #{$spotify-white} !important;
+    color: #{$sp-white} !important;
     font-weight: 500;
   }
-  
+
   .mat-icon {
-    color: #{$spotify-white} !important;
+    color: #{$sp-white} !important;
   }
 }
 
 .mat-mdc-header-cell {
-  color: #{$spotify-surface} !important;
+  color: #{$sp-surface} !important;
   font-size: 12px !important;
   letter-spacing: 1px !important;
   text-transform: uppercase;
 }
 
 body {
-  background-color: #{$spotify-icon-black};
-  color: #{$spotify-white};
+  background-color: #{$sp-icon-black};
+  color: #{$sp-white};
   margin: 0;
   font-family: 'Circular', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
