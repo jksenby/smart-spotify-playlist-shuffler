@@ -1,27 +1,33 @@
 import base64
 import httpx
-from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, status
+from typing import Annotated, Optional
+from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
 from fastapi.responses import RedirectResponse
-from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from jose import JWTError, jwt
 
-from app.db.session import get_db
-from app.security import create_access_token, generate_random_string
-from app.config import settings
-from app.models.user import User
+from db.session import get_db
+from security import create_access_token, generate_random_string
+from config import settings
+from models.user import User
 
 router = APIRouter(prefix="/auth", tags=["auth"])
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+credentials_exception = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Could not validate credentials",
+)
+
+async def get_current_user(request: Request, db: Session = Depends(get_db)):
+    """
+    Extracts the token from the HttpOnly cookie 'access_token'.
+    """
+    token = request.cookies.get("access_token")
+    
+    if not token:
+        raise credentials_exception
+
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
     except JWTError as exc:
@@ -56,6 +62,10 @@ def login_spotify():
 
 @router.get("/callback")
 async def callback_spotify(code: str, db: Session = Depends(get_db)):
+    """
+    Exchanges the auth code for a token, fetches the user from Spotify,
+    updates the DB, and sets the HTTPOnly Session Cookie.
+    """
     auth_string = f"{settings.SPOTIFY_CLIENT_ID}:{settings.SPOTIFY_CLIENT_SECRET}"
     auth_bytes = auth_string.encode("ascii")
     auth_base64 = base64.b64encode(auth_bytes).decode("ascii")
@@ -93,16 +103,69 @@ async def callback_spotify(code: str, db: Session = Depends(get_db)):
         
     spotify_id = user_data.get("id")
     display_name = user_data.get("display_name")
+    email = user_data.get("email")
+    country = user_data.get("country")
+    product = user_data.get("product")
+    images = user_data.get("images")
+    followers = user_data.get("followers")
+    external_urls = user_data.get("external_urls")
     
     stmt = select(User).where(User.spotify_id == spotify_id)
     user = db.execute(stmt).scalars().first()
     
     if not user:
-        user = User(spotify_id=spotify_id, display_name=display_name)
+        user = User(
+            spotify_id=spotify_id, 
+            display_name=display_name,
+            email=email,
+            country=country,
+            product=product,
+            images=images,
+            followers=followers,
+            external_urls=external_urls
+        )
         db.add(user)
-        db.commit()
+    else:
+        user.display_name = display_name
+        user.email = email
+        user.country = country
+        user.product = product
+        user.images = images
+        user.followers = followers
+        user.external_urls = external_urls
+        
+    db.commit()
     
     access_token = create_access_token(data={"sub": spotify_id})
     
-    redirect_url = f"{settings.FRONTEND_URL}?token={access_token}"
-    return RedirectResponse(redirect_url)
+    redirect_url = settings.FRONTEND_URL
+    response = RedirectResponse(url=redirect_url, status_code=status.HTTP_303_SEE_OTHER)
+    
+    response.set_cookie(
+        key="access_token", 
+        value=access_token, 
+        httponly=True,   
+        secure=False,
+        max_age=3600,
+        samesite="lax",
+        path="/",
+        domain=settings.FRONTEND_URL
+    )
+    return response
+
+@router.get("/me")
+def get_user_me(current_user: User = Depends(get_current_user)):
+    return current_user
+
+@router.get("/logout")
+def logout():
+    """Clears the authentication cookie"""
+    response = Response(status_code=status.HTTP_200_OK)
+    response.delete_cookie(
+        key="access_token", 
+        httponly=True, 
+        secure=False, 
+        samesite="lax", 
+        path="/"
+    )
+    return {"message": "Logged out successfully"}
