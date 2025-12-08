@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { map } from 'rxjs';
 import { LoginFormComponent } from '@app/_shared/ui/login-form/login-form.component';
 import { AuthActions } from '@app/store/auth/auth.actions';
 import { Store } from '@ngxs/store';

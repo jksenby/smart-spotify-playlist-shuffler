@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { RouterModule } from '@angular/router';
-import { Select, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { AuthActions } from '@app/store/auth/auth.actions';
 import { AuthState } from '@app/store/auth/auth.state';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';

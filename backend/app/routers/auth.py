@@ -20,11 +20,17 @@ credentials_exception = HTTPException(
 )
 
 async def get_current_user(request: Request, db: Session = Depends(get_db)):
-    """
-    Extracts the token from the HttpOnly cookie 'access_token'.
-    """
-    token = request.cookies.get("access_token")
-    
+    token = None
+
+    auth_header = request.headers.get("Authorization", "")
+    if auth_header.startswith("Bearer "):
+        token = auth_header.replace("Bearer ", "")
+
+    if not token:
+        token = request.cookies.get("access_token")
+        
+    print(token)
+
     if not token:
         raise credentials_exception
 
@@ -36,13 +42,14 @@ async def get_current_user(request: Request, db: Session = Depends(get_db)):
     spotify_id: str | None = payload.get("sub")
     if spotify_id is None:
         raise credentials_exception
-        
+
     stmt = select(User).where(User.spotify_id == spotify_id)
     user = db.execute(stmt).scalars().first()
-    
     if user is None:
         raise credentials_exception
+
     return user
+
 
 
 @router.get("/login")
@@ -139,19 +146,8 @@ async def callback_spotify(code: str, db: Session = Depends(get_db)):
     
     access_token = create_access_token(data={"sub": spotify_id})
     
-    redirect_url = settings.FRONTEND_URL
-    response = RedirectResponse(url=redirect_url, status_code=status.HTTP_303_SEE_OTHER)
-
-    response.set_cookie(
-        key="access_token", 
-        value=access_token, 
-        httponly=True,   
-        secure=True,
-        max_age=3600,
-        samesite="lax",
-        path="/",
-    )
-    return response
+    redirect_url = f"{settings.FRONTEND_URL}/auth/callback?token={access_token}"
+    return RedirectResponse(url=redirect_url, status_code=status.HTTP_303_SEE_OTHER)
 
 @router.get("/me")
 def get_user_me(current_user: User = Depends(get_current_user)):
