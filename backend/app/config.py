@@ -6,7 +6,7 @@ load_dotenv()
 class Settings:
     DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@db:5432/server_monitoring")
     JWT_SECRET = os.getenv("JWT_SECRET", "supersecret")
-    FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:4200")
+    FRONTEND_URL = os.getenv("FRONTEND_URL", "https://localhost:4200")
     SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
     SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
     SPOTIFY_REDIRECT_URI = os.getenv("SPOTIFY_REDIRECT_URI")

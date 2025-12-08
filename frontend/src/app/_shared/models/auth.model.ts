@@ -1,6 +1,7 @@
+import { User } from "./user.model";
+
 export interface AuthModel {
-  token: string | null;
-  username: string | null;
+  user: User | null;
   loading: boolean;
   error: string | null;
 }

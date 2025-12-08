@@ -3,33 +3,77 @@ import { AuthModel } from '@app/_shared/models/auth.model';
 import { AuthService } from '@app/_shared/services/auth-service';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { AuthActions } from './auth.actions';
-import { tap } from 'rxjs';
+import { User } from '@app/_shared/models/user.model';
+import { catchError, tap, throwError } from 'rxjs';
 
 @State<AuthModel>({
   name: 'auth',
   defaults: {
-    username: null,
-    token: null,
+    user: null,
     loading: false,
     error: null,
   },
 })
 @Injectable()
 export class AuthState {
-  @Selector()
-  static isAutheticated(state: AuthModel): boolean {
-    return !!state.token;
-  }
-
-  @Selector()
-  static selectUser(state: AuthModel) {
-    return state;
-  }
-
   constructor(private authService: AuthService) {}
 
+  @Selector()
+  static isAuthenticated(state: AuthModel): boolean {
+    return !!state.user;
+  }
+
+  @Selector()
+  static getUser(state: AuthModel): User | null {
+    return state.user ?? null;
+  }
+
+  @Selector()
+  static isLoading(state: AuthModel): boolean {
+    return state.loading;
+  }
+
+  @Selector()
+  static getError(state: AuthModel): string | null {
+    return state.error;
+  }
+
   @Action(AuthActions.Login)
-  login(ctx: StateContext<AuthModel>, action: AuthActions.Login) {
-    return this.authService.login(action.payload);
+  login(ctx: StateContext<AuthModel>) {
+    return this.authService.login();
+  }
+
+  @Action(AuthActions.Logout)
+  logout(ctx: StateContext<AuthModel>) {
+    return this.authService.logout().pipe(
+      tap(() => {
+        ctx.setState({
+          user: null,
+          loading: false,
+          error: null,
+        });
+      }),
+    );
+  }
+
+  @Action(AuthActions.GetCurrentUser)
+  getCurrentUser(ctx: StateContext<AuthModel>) {
+    return this.authService.getCurrentUser().pipe(
+      tap((user: User) => {
+        ctx.patchState({
+          user: user,
+          loading: false,
+          error: null,
+        });
+      }),
+      catchError((err) => {
+        ctx.patchState({
+          user: null,
+          loading: false,
+          error: null,
+        });
+        return throwError(() => err);
+      }),
+    );
   }
 }

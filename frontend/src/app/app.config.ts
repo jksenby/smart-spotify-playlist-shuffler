@@ -1,5 +1,6 @@
 import {
   ApplicationConfig,
+  importProvidersFrom,
   provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection,
 } from '@angular/core';
@@ -13,7 +14,9 @@ import { withNgxsFormPlugin } from '@ngxs/form-plugin';
 import { withNgxsReduxDevtoolsPlugin } from '@ngxs/devtools-plugin';
 import { withNgxsStoragePlugin } from '@ngxs/storage-plugin';
 import { withNgxsLoggerPlugin } from '@ngxs/logger-plugin';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { authInterceptor } from './_shared/interceptors/auth-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,7 +24,8 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideStore([AuthState, PlaylistState]),
-    provideHttpClient(),
+    importProvidersFrom(NgxSpinnerModule.forRoot()),
+    provideHttpClient(withInterceptors([authInterceptor])),
     withNgxsFormPlugin(),
     withNgxsLoggerPlugin(),
     withNgxsReduxDevtoolsPlugin(),

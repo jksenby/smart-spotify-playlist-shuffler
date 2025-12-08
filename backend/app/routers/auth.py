@@ -1,16 +1,15 @@
 import base64
 import httpx
-from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from jose import JWTError, jwt
 
-from db.session import get_db
-from security import create_access_token, generate_random_string
-from config import settings
-from models.user import User
+from app.db.session import get_db
+from app.security import create_access_token, generate_random_string
+from app.config import settings
+from app.models.user import User
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -29,7 +28,7 @@ async def get_current_user(request: Request, db: Session = Depends(get_db)):
         raise credentials_exception
 
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        payload = jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM])
     except JWTError as exc:
         raise credentials_exception from exc
 
@@ -140,16 +139,15 @@ async def callback_spotify(code: str, db: Session = Depends(get_db)):
     
     redirect_url = settings.FRONTEND_URL
     response = RedirectResponse(url=redirect_url, status_code=status.HTTP_303_SEE_OTHER)
-    
+
     response.set_cookie(
         key="access_token", 
         value=access_token, 
         httponly=True,   
-        secure=False,
+        secure=True,
         max_age=3600,
         samesite="lax",
         path="/",
-        domain=settings.FRONTEND_URL
     )
     return response
 

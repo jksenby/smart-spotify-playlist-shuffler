@@ -29,3 +29,6 @@ frontend/Thumbs.debug
 # Environmental Variables
 .env
 frontend/src/environments/environment.development.ts
+
+*.pyc
+ssl-certificates/
