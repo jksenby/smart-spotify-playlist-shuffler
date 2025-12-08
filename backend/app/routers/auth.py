@@ -5,6 +5,7 @@ from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from jose import JWTError, jwt
+from urllib.parse import quote
 
 from app.db.session import get_db
 from app.security import create_access_token, generate_random_string
@@ -47,16 +48,17 @@ async def get_current_user(request: Request, db: Session = Depends(get_db)):
 @router.get("/login")
 def login_spotify():
     """Redirects User to Spotify Authorization Page"""
-    scopes = "user-read-private user-read-email"
-    state = generate_random_string(16)
-    url = (
-        f"https://accounts.spotify.com/authorize"
-        f"?response_type=code"
-        f"&client_id={settings.SPOTIFY_CLIENT_ID}"
-        f"&scope={scopes}"
-        f"&redirect_uri={settings.SPOTIFY_REDIRECT_URI}"
-        f"&state={state}"
-    )
+    from urllib.parse import urlencode
+    
+    params = {
+        "response_type": "code",
+        "client_id": settings.SPOTIFY_CLIENT_ID,
+        "scope": "user-read-private user-read-email",
+        "redirect_uri": settings.SPOTIFY_REDIRECT_URI,
+        "state": generate_random_string(16)
+    }
+    
+    url = f"https://accounts.spotify.com/authorize?{urlencode(params)}"
     return RedirectResponse(url)
 
 @router.get("/callback")
@@ -162,7 +164,7 @@ def logout():
     response.delete_cookie(
         key="access_token", 
         httponly=True, 
-        secure=False, 
+        secure=True, 
         samesite="lax", 
         path="/"
     )

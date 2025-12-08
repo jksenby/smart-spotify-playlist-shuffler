@@ -14,6 +14,6 @@ def create_access_token(data: dict):
     return jwt.encode(to_encode, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
 
 def generate_random_string(length: int):
-    characters = string.ascii_letters + string.digits + string.punctuation
+    characters = string.ascii_letters + string.digits
     random_string = ''.join(random.choice(characters) for _ in range(length))
     return random_string
