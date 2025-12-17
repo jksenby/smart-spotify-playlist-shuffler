@@ -48,7 +48,7 @@ export class AuthService {
       tap(() => {
         sessionStorage.removeItem('access_token');
         this.userSubject.next(null);
-        this.router.navigate(['/']);
+        location.reload()
       }),
       catchError((error) => {
         sessionStorage.removeItem('access_token');

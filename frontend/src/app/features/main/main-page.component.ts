@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { AuthActions } from '@app/store/auth/auth.actions';
@@ -20,6 +21,7 @@ import { User } from '@app/_shared/models/user.model';
     MatIconModule,
     MatInputModule,
     MatFormFieldModule,
+    MatMenuModule,
     NgxSpinnerModule,
     FormsModule,
     CommonModule,

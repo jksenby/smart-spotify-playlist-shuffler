@@ -1,14 +1,51 @@
 <div class="min-h-screen font-sans p-4 md:p-8 bg-(--mat-sys-background)">
   <div class="avatar mx-auto max-w-max mb-4">
-    <button
-      matFab
-      extended
-      class="bg-(--mat-sys-surface-container-high)! text-white! hover:bg-(--mat-sys-primary)! transition-colors"
-      (click)="onLogin()"
-    >
-      Login
-      <mat-icon>login</mat-icon>
-  </button>
+    @if (isAuthenticated$ | async) {
+      <button
+        [matMenuTriggerFor]="userMenu"
+        matFab
+        extended
+        class="bg-(--mat-sys-surface-container-high)! text-white! hover:bg-(--mat-sys-primary)! transition-colors flex items-center gap-2"
+      >
+        @if ((user$ | async)?.images; as images) {
+          <img
+            [src]="images[0].url"
+            alt="User avatar"
+            class="w-8 h-8 rounded-full object-cover"
+          />
+        } @else {
+          <mat-icon>account_circle</mat-icon>
+        }
+        <span class="truncate max-w-32">
+          {{ (user$ | async)?.display_name || 'User' }}
+        </span>
+      </button>
+  
+      <mat-menu #userMenu="matMenu">
+        <div class="px-4 py-2 border-b border-(--mat-sys-outline)">
+          <p class="font-medium text-(--mat-sys-on-surface)">
+            {{ (user$ | async)?.display_name }}
+          </p>
+          <p class="text-sm text-(--mat-sys-on-surface-variant)">
+            {{ (user$ | async)?.email }}
+          </p>
+        </div>
+        <button mat-menu-item (click)="onLogout()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    } @else {
+      <button
+        matFab
+        extended
+        class="bg-(--mat-sys-surface-container-high)! text-white! hover:bg-(--mat-sys-primary)! transition-colors"
+        (click)="onLogin()"
+      >
+        Login
+        <mat-icon>login</mat-icon>
+      </button>
+    }
   </div>
   <div
     class="max-w-2xl mx-auto bg-(--mat-sys-surface) rounded-xl shadow-2xl overflow-hidden border border-(--mat-sys-outline)"
