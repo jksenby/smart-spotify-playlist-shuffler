@@ -8,9 +8,8 @@ describe('AuthCallback', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AuthCallback]
-    })
-    .compileComponents();
+      imports: [AuthCallback],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AuthCallback);
     component = fixture.componentInstance;

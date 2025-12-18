@@ -3,7 +3,7 @@ import { AuthModel } from '@app/_shared/models/auth.model';
 import { AuthService } from '@app/_shared/services/auth-service';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { AuthActions } from './auth.actions';
-import { User } from '@app/_shared/models/user.model';
+import { User } from '@app/_shared/models/spotify.model';
 import { catchError, tap, throwError } from 'rxjs';
 
 @State<AuthModel>({

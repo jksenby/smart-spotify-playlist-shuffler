@@ -1,4 +1,4 @@
-import { User } from "./user.model";
+import { User } from './spotify.model';
 
 export interface AuthModel {
   user: User | null;

@@ -6,5 +6,11 @@ import { environment } from '@env/environment.development';
   providedIn: 'root',
 })
 export class SporifyService {
+  private apiUrl = environment.API_URL;
+
   constructor(private http: HttpClient) {}
+
+  getUserPlaylists() {
+    return this.http.get(`${this.apiUrl}/spotify/playlists`);
+  }
 }

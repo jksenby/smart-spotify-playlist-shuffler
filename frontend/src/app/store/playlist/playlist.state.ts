@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PlaylistModel } from '@app/_shared/models/playlist..model';
+import { PlaylistModel } from '@app/_shared/models/spotify.model';
 import { State } from '@ngxs/store';
 
 @State<PlaylistModel>({

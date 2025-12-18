@@ -12,7 +12,7 @@ import { Store } from '@ngxs/store';
 import { AuthActions } from '@app/store/auth/auth.actions';
 import { AuthState } from '@app/store/auth/auth.state';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
-import { User } from '@app/_shared/models/user.model';
+import { User } from '@app/_shared/models/spotify.model';
 
 @Component({
   selector: 'app-main-page',
@@ -47,6 +47,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
   public onAdd() {}
 
   public onShuffle() {}
+
+  public onUploadPlaylist() {}
 
   public onLogin() {
     this.store.dispatch(new AuthActions.Login());

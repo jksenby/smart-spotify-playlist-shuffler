@@ -8,11 +8,7 @@
         class="bg-(--mat-sys-surface-container-high)! text-white! hover:bg-(--mat-sys-primary)! transition-colors flex items-center gap-2"
       >
         @if ((user$ | async)?.images; as images) {
-          <img
-            [src]="images[0].url"
-            alt="User avatar"
-            class="w-8 h-8 rounded-full object-cover"
-          />
+          <img [src]="images[0].url" alt="User avatar" class="w-8 h-8 rounded-full object-cover" />
         } @else {
           <mat-icon>account_circle</mat-icon>
         }
@@ -20,7 +16,7 @@
           {{ (user$ | async)?.display_name || 'User' }}
         </span>
       </button>
-  
+
       <mat-menu #userMenu="matMenu">
         <div class="px-4 py-2 border-b border-(--mat-sys-outline)">
           <p class="font-medium text-(--mat-sys-on-surface)">
@@ -48,7 +44,7 @@
     }
   </div>
   <div
-    class="max-w-2xl mx-auto bg-(--mat-sys-surface) rounded-xl shadow-2xl overflow-hidden border border-(--mat-sys-outline)"
+    class="max-w-3xl mx-auto bg-(--mat-sys-surface) rounded-xl shadow-2xl overflow-hidden border border-(--mat-sys-outline)"
   >
     <div
       class="p-6 flex justify-between items-end bg-linear-to-b from-(--mat-sys-surface-container-high) to-(--mat-sys-surface)"
@@ -62,25 +58,37 @@
           Super Shuffler
         </h1>
       </div>
+      <div class="flex gap-2 items-center">
+        <button
+          mat-flat-button
+          color="primary"
+          class="rounded-full! font-bold! px-8! py-6!"
+          (click)="onShuffle()"
+          [disabled]="loading$ | async"
+        >
+          @if (loading$ | async) {
+            <div class="flex items-center gap-2">
+              <mat-icon class="animate-spin">refresh</mat-icon>
+              <span>Mixing...</span>
+            </div>
+          } @else {
+            <div class="flex items-center gap-2">
+              <span>SHUFFLE</span>
+            </div>
+          }
+        </button>
 
-      <button
-        mat-flat-button
-        color="primary"
-        class="rounded-full! font-bold! px-8! py-6!"
-        (click)="onShuffle()"
-        [disabled]="loading$ | async"
-      >
-        @if (loading$ | async) {
-          <div class="flex items-center gap-2">
-            <mat-icon class="animate-spin">refresh</mat-icon>
-            <span>Mixing...</span>
-          </div>
-        } @else {
-          <div class="flex items-center gap-2">
-            <span>SHUFFLE</span>
-          </div>
-        }
-      </button>
+        <button
+          mat-stroked-button
+          color="primary"
+          class="rounded-full! font-bold!"
+          (click)="onUploadPlaylist()"
+          [disabled]="!(isAuthenticated$ | async)"
+        >
+          <mat-icon>playlist_add</mat-icon>
+          <span>Upload Playlist</span>
+        </button>
+      </div>
     </div>
 
     <div class="p-6 bg-(--mat-sys-surface)">

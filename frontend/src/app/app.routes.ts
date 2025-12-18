@@ -9,7 +9,7 @@ export const routes: Routes = [
     path: 'auth',
     children: [
       { path: 'callback', component: AuthCallback },
-      { path: 'callback', component: LoginPageComponent }
-    ]
+      { path: 'callback', component: LoginPageComponent },
+    ],
   },
 ];

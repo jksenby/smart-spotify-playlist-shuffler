@@ -29,8 +29,6 @@ async def get_current_user(request: Request, db: Session = Depends(get_db)):
     if not token:
         token = request.cookies.get("access_token")
         
-    print(token)
-
     if not token:
         raise credentials_exception
 
@@ -60,7 +58,7 @@ def login_spotify():
     params = {
         "response_type": "code",
         "client_id": settings.SPOTIFY_CLIENT_ID,
-        "scope": "user-read-private user-read-email",
+        "scope": "user-read-private user-read-email playlist-read-private playlist-modify-public playlist-modify-private user-read-playback-position user-read-recently-played",
         "redirect_uri": settings.SPOTIFY_REDIRECT_URI,
         "state": generate_random_string(16)
     }

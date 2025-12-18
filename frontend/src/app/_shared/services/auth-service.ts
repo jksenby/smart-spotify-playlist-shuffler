@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Router, } from '@angular/router';
+import { Router } from '@angular/router';
 import { environment } from '@env/environment.development';
-import { User } from '../models/user.model';
+import { User } from '../models/spotify.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,12 +12,11 @@ export class AuthService {
   public apiUrl = `${environment.API_URL}/auth`;
   private userSubject = new BehaviorSubject<User | null>(null);
   public user = this.userSubject.asObservable();
-  
+
   constructor(
     private http: HttpClient,
     private router: Router,
-  ) {
-  }
+  ) {}
 
   public get currentUserValue(): User | null {
     return this.userSubject.value;
@@ -48,14 +47,14 @@ export class AuthService {
       tap(() => {
         sessionStorage.removeItem('access_token');
         this.userSubject.next(null);
-        location.reload()
+        location.reload();
       }),
       catchError((error) => {
         sessionStorage.removeItem('access_token');
         this.userSubject.next(null);
         console.error('Logout failed:', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -67,7 +66,7 @@ export class AuthService {
       catchError((error) => {
         console.error('Get current user failed:', error);
         return of(null);
-      })
+      }),
     );
   }
 }
