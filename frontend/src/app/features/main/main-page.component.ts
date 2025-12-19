@@ -1,18 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { filter, first, Observable, Subject, takeUntil } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDialog } from '@angular/material/dialog';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { AuthActions } from '@app/store/auth/auth.actions';
 import { AuthState } from '@app/store/auth/auth.state';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { User } from '@app/_shared/models/spotify.model';
+import { PlaylistDialog } from '../dialogs/playlist-dialog/playlist-dialog';
 
 @Component({
   selector: 'app-main-page',
@@ -33,6 +35,7 @@ import { User } from '@app/_shared/models/spotify.model';
 export class MainPageComponent implements OnInit, OnDestroy {
   private store = inject(Store);
   private spinner = inject(NgxSpinnerService);
+  private dialog = inject(MatDialog);
 
   public user$: Observable<User | null> = this.store.select(AuthState.getUser);
   public isAuthenticated$: Observable<boolean> = this.store.select(AuthState.isAuthenticated);
@@ -48,7 +51,17 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   public onShuffle() {}
 
-  public onUploadPlaylist() {}
+  public onUploadPlaylist() {
+    this.dialog.open(PlaylistDialog, {
+      minWidth: '400px',
+      width: '720px',
+      maxWidth: '720px',
+      minHeight: '150px'
+    }).afterClosed().pipe(first(), filter(d => !!d))
+    .subscribe(response => {
+      console.log(response)
+    });
+  }
 
   public onLogin() {
     this.store.dispatch(new AuthActions.Login());

@@ -1,5 +1,5 @@
 from typing import TYPE_CHECKING, List
-from sqlalchemy import JSON
+from sqlalchemy import JSON, String
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from app.db.session import Base
 
@@ -17,7 +17,11 @@ class User(Base):
     images: Mapped[list | None] = mapped_column(JSON, nullable=True)
     followers: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     external_urls: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+
+    spotify_access_token: Mapped[str | None] = mapped_column(String, nullable=True)
+    spotify_refresh_token: Mapped[str | None] = mapped_column(String, nullable=True)
+    spotify_token_expires_at: Mapped[int | None] = mapped_column(nullable=True)
     
     is_active: Mapped[bool] = mapped_column(default=True)
 
-    tracks: Mapped[List["Track"]] = relationship("app.models.track.Track", back_populates="owner")
+    tracks: Mapped[List["Track"]] = relationship("Track", back_populates="owner")

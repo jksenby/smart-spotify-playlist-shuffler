@@ -1,12 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth, tracks
+from app.routers import auth, spotify
 import uvicorn
 import os
 import asyncio
 from pathlib import Path
 
 from app.db.session import Base, engine
+from app.models import User, Track
 
 Base.metadata.create_all(bind=engine)
 
@@ -25,7 +26,7 @@ async def root():
     return {"message": "Hello World"}
 
 app.include_router(auth.router)
-app.include_router(tracks.router)
+app.include_router(spotify.router)
 
 if __name__ == "__main__":
     if os.name == 'nt':

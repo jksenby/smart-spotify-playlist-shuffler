@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Playlists</h2>
+
+<mat-dialog-content>
+    @if(playlists$ | async; as playlists) {
+        <div>a</div>
+    } @else {
+        <p>No playlists was found.</p>
+    }
+</mat-dialog-content>

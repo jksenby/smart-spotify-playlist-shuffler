@@ -1,11 +1,11 @@
 import base64
 import httpx
+import time
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from jose import JWTError, jwt
-from urllib.parse import quote
 
 from app.db.session import get_db
 from app.security import create_access_token, generate_random_string
@@ -21,14 +21,11 @@ credentials_exception = HTTPException(
 
 async def get_current_user(request: Request, db: Session = Depends(get_db)):
     token = None
-
     auth_header = request.headers.get("Authorization", "")
     if auth_header.startswith("Bearer "):
         token = auth_header.replace("Bearer ", "")
-
     if not token:
         token = request.cookies.get("access_token")
-        
     if not token:
         raise credentials_exception
 
@@ -48,7 +45,54 @@ async def get_current_user(request: Request, db: Session = Depends(get_db)):
 
     return user
 
+async def refresh_spotify_token(user: User, db: Session) -> str:
+    """Refresh the Spotify access token using the refresh token"""
+    if not user.spotify_refresh_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="No refresh token available. Please re-authenticate."
+        )
+    
+    auth_string = f"{settings.SPOTIFY_CLIENT_ID}:{settings.SPOTIFY_CLIENT_SECRET}"
+    auth_bytes = auth_string.encode("ascii")
+    auth_base64 = base64.b64encode(auth_bytes).decode("ascii")
 
+    headers = {
+        "Authorization": f"Basic {auth_base64}",
+        "Content-Type": "application/x-www-form-urlencoded",
+    }
+    
+    data = {
+        "grant_type": "refresh_token",
+        "refresh_token": user.spotify_refresh_token,
+    }
+
+    async with httpx.AsyncClient() as client:
+        token_res = await client.post(
+            "https://accounts.spotify.com/api/token",
+            data=data,
+            headers=headers,
+        )
+        
+        if token_res.status_code != 200:
+            raise HTTPException(
+                status_code=400, 
+                detail="Failed to refresh Spotify token. Please re-authenticate."
+            )
+             
+        token_data = token_res.json()
+        new_access_token = token_data.get("access_token")
+        expires_in = token_data.get("expires_in", 3600)
+        
+        new_refresh_token = token_data.get("refresh_token")
+        if new_refresh_token:
+            user.spotify_refresh_token = new_refresh_token
+        
+        user.spotify_access_token = new_access_token
+        user.spotify_token_expires_at = int(time.time()) + expires_in
+        db.commit()
+        
+        return new_access_token
 
 @router.get("/login")
 def login_spotify():
@@ -68,10 +112,7 @@ def login_spotify():
 
 @router.get("/callback")
 async def callback_spotify(code: str, db: Session = Depends(get_db)):
-    """
-    Exchanges the auth code for a token, fetches the user from Spotify,
-    updates the DB, and sets the HTTPOnly Session Cookie.
-    """
+    """Exchanges auth code for token and stores it"""
     auth_string = f"{settings.SPOTIFY_CLIENT_ID}:{settings.SPOTIFY_CLIENT_SECRET}"
     auth_bytes = auth_string.encode("ascii")
     auth_base64 = base64.b64encode(auth_bytes).decode("ascii")
@@ -100,13 +141,15 @@ async def callback_spotify(code: str, db: Session = Depends(get_db)):
              
         token_data = token_res.json()
         spotify_access_token = token_data.get("access_token")
+        spotify_refresh_token = token_data.get("refresh_token")
+        expires_in = token_data.get("expires_in", 3600)
 
         user_res = await client.get(
             "https://api.spotify.com/v1/me",
             headers={"Authorization": f"Bearer {spotify_access_token}"}
         )
         user_data = user_res.json()
-        
+    
     spotify_id = user_data.get("id")
     display_name = user_data.get("display_name")
     email = user_data.get("email")
@@ -119,6 +162,8 @@ async def callback_spotify(code: str, db: Session = Depends(get_db)):
     stmt = select(User).where(User.spotify_id == spotify_id)
     user = db.execute(stmt).scalars().first()
     
+    token_expires_at = int(time.time()) + expires_in
+    
     if not user:
         user = User(
             spotify_id=spotify_id, 
@@ -128,7 +173,10 @@ async def callback_spotify(code: str, db: Session = Depends(get_db)):
             product=product,
             images=images,
             followers=followers,
-            external_urls=external_urls
+            external_urls=external_urls,
+            spotify_access_token=spotify_access_token,
+            spotify_refresh_token=spotify_refresh_token,
+            spotify_token_expires_at=token_expires_at
         )
         db.add(user)
     else:
@@ -139,11 +187,13 @@ async def callback_spotify(code: str, db: Session = Depends(get_db)):
         user.images = images
         user.followers = followers
         user.external_urls = external_urls
+        user.spotify_access_token = spotify_access_token
+        user.spotify_refresh_token = spotify_refresh_token
+        user.spotify_token_expires_at = token_expires_at
         
     db.commit()
     
     access_token = create_access_token(data={"sub": spotify_id})
-    
     redirect_url = f"{settings.FRONTEND_URL}/auth/callback?token={access_token}"
     return RedirectResponse(url=redirect_url, status_code=status.HTTP_303_SEE_OTHER)
 

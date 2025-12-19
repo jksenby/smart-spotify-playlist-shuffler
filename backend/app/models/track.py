@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, Mapped, mapped_column
-from app.models.user import User
 from app.db.session import Base
 
 if TYPE_CHECKING:
@@ -16,4 +15,4 @@ class Track(Base):
     position: Mapped[int] = mapped_column(index=True)
     owner_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
 
-    owner: Mapped["User"] = relationship("app.models.user.User", back_populates="tracks")
+    owner: Mapped["User"] = relationship("User", back_populates="tracks")
