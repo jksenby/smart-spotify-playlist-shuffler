@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
 import { Observable } from 'rxjs';
-import { Playlist, Track } from '../models/spotify.model';
+import { PlaylistResponse, TracksResponse } from '../models/schemas';
 
 @Injectable({
   providedIn: 'root',
@@ -12,12 +12,12 @@ export class SporifyService {
 
   constructor(private http: HttpClient) {}
 
-  getUserPlaylists(): Observable<Playlist[]> {
-    return this.http.get<Playlist[]>(`${this.apiUrl}/spotify/playlists`);
+  getUserPlaylists(): Observable<PlaylistResponse> {
+    return this.http.get<PlaylistResponse>(`${this.apiUrl}/spotify/playlists`);
   }
 
-  getPlaylistTracks(playlistId: string): Observable<Track[]> {
-    return this.http.get<Track[]>(`${this.apiUrl}/spotify/playlists/${playlistId}/tracks`);
+  getPlaylistTracks(playlistId: string): Observable<TracksResponse> {
+    return this.http.get<TracksResponse>(`${this.apiUrl}/spotify/playlists/${playlistId}/tracks`);
   }
 
   postPlaylist(playlistId: string) {

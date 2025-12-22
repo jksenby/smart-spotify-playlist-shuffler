@@ -17,6 +17,7 @@ export interface Track {
   total_tracks: number;
   type: string;
   uri: string;
+  duration_ms: number;
   limit?: number;
   offset?: number;
   next?: string;

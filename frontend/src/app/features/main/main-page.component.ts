@@ -53,10 +53,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   public onUploadPlaylist() {
     this.dialog.open(PlaylistDialog, {
-      minWidth: '400px',
-      width: '720px',
-      maxWidth: '720px',
-      minHeight: '150px'
+      minWidth: '70vw',
+      minHeight: '75vh'
     }).afterClosed().pipe(first(), filter(d => !!d))
     .subscribe(response => {
       console.log(response)

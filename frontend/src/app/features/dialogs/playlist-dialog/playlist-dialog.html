@@ -1,9 +1,69 @@
-<h2 mat-dialog-title>Playlists</h2>
+<h2 mat-dialog-title>Select playlist to import</h2>
 
 <mat-dialog-content>
-    @if(playlists$ | async; as playlists) {
-        <div>a</div>
-    } @else {
-        <p>No playlists was found.</p>
-    }
+  @if (playlists$ | async; as playlists) {
+    <mat-accordion multi>
+      @for (playlist of playlists; track playlist.id) {
+        <mat-expansion-panel (opened)="onPanelOpened(playlist)">
+          <mat-expansion-panel-header>
+            <div class="playlist-header">
+              <div class="left">
+                @if (playlist.images[0]) {
+                  <div class="cover">
+                    <img [src]="playlist.images[0].url" [alt]="playlist.name" />
+                  </div>
+                } @else {
+                  <div class="cover placeholder">
+                    <mat-icon>queue_music</mat-icon>
+                  </div>
+                }
+
+                <div class="meta">
+                  <div class="name">{{ playlist.name }}</div>
+                  <div class="tracks">
+                    {{ playlist.tracks.total }}
+                    {{ playlist.tracks.total === 1 ? 'track' : 'tracks' }}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                mat-stroked-button
+                extended
+                color="primary"
+                class="import-btn"
+                (click)="$event.stopPropagation(); import(playlist)"
+              >
+                Import
+              </button>
+            </div>
+          </mat-expansion-panel-header>
+
+          @if (playlist.tracks.total && playlist.tracks.items) {
+            <div class="track-list">
+              <div class="track-row header">
+                <div class="col index">#</div>
+                <div class="col title">Title</div>
+                <div class="col artist">Artist</div>
+                <div class="col duration">Duration</div>
+              </div>
+
+            @for (item of playlist.tracks.items; track item.track.id; let i = $index) {
+              <div class="track-row">
+                <div class="col index">{{ i + 1 }}</div>
+                <div class="col title">{{ item.track.name }}</div>
+                <div class="col artist">{{ getArtistNames(item.track.artists) }}</div>
+                <div class="col duration">{{ formatDuration(item.track.duration_ms) }}</div>
+              </div>
+            }
+            </div>
+          }
+
+          @if (playlist.tracks.total) {
+            <div class="no-tracks">No tracks loaded for this playlist yet.</div>
+          }
+        </mat-expansion-panel>
+      }
+    </mat-accordion>
+  }
 </mat-dialog-content>
