@@ -63,10 +63,18 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   public onAdd() {}
 
-  public onShuffle() {
-    this.store.dispatch(new PlaylistActions.ShufflePlaylist()).subscribe({
+  public onShuffle(algorithm: string = 'basic_shuffle') {
+    this.store.dispatch(new PlaylistActions.ShufflePlaylist(algorithm)).subscribe({
       next: () => {
-        this.snackBar.open('Playlist shuffled!', 'Close');
+        const algorithmNames: { [key: string]: string } = {
+          basic_shuffle: 'Basic Shuffle',
+          balanced_artist: 'Balanced Artist',
+          smart_spacing: 'Smart Spacing',
+          weighted: 'Weighted Random',
+          mood_based: 'Mood-Based Flow',
+        };
+        const algorithmName = algorithmNames[algorithm] || algorithm;
+        this.snackBar.open(`Playlist shuffled using ${algorithmName} algorithm!`, 'Close');
       },
       error: () => {
         this.snackBar.open('Something went wrong', 'Close');

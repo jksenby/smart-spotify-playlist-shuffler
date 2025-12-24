@@ -106,7 +106,7 @@ export class PlaylistState {
   }
 
   @Action(PlaylistActions.ShufflePlaylist)
-  shufflePlaylist(ctx: StateContext<PlaylistStateModel>) {
+  shufflePlaylist(ctx: StateContext<PlaylistStateModel>, action: PlaylistActions.ShufflePlaylist) {
     const state = ctx.getState();
 
     if (!state.currentTracks.length || !state.currentPlaylist) {
@@ -115,7 +115,7 @@ export class PlaylistState {
 
     ctx.patchState({ shuffling: true, error: null });
 
-    return this.spotifyService.shufflePlaylist(state.currentPlaylist.id).pipe(
+    return this.spotifyService.shufflePlaylist(state.currentPlaylist.id, action.algorithm).pipe(
       tap((shuffledTracks) => {
         ctx.patchState({
           currentTracks: shuffledTracks,

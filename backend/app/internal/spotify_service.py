@@ -85,19 +85,24 @@ class SpotifyService:
         
         return all_tracks
 
-    async def get_audio_features(self, track_ids: List[str]) -> List[Dict[str, Any]]:
-        """Get audio features for a list of tracks"""
-        if len(track_ids) > 100:
-            return ValueError("Maximum 100 track IDs allowed per request")
-
-        async with httpx.AsyncClient() as client:
-            response = await client.get(
-                f"{self.BASE_URL}/audio-features",
-                headers=self.headers,
-                params={"ids": ",".join(track_ids)},
+    async def get_audio_features(self, track_ids: List[str]) -> List[Dict]:
+        """Get audio features for multiple tracks"""
+        all_features = []
+        
+        for i in range(0, len(track_ids), 100):
+            batch = track_ids[i:i + 100]
+            ids_param = ','.join(batch)
+            
+            response = await self.client.get(
+                f"https://api.spotify.com/v1/audio-features",
+                params={"ids": ids_param}
             )
             response.raise_for_status()
-            return response.json().get("audio_features", [])
+            data = response.json()
+            all_features.extend(data.get('audio_features', []))
+        
+        return all_features
+
 
     async def create_playlist(self, playlist_name: str, user_id: str) -> Dict[str, Any]:
         """Create a new playlist and add tracks to it"""

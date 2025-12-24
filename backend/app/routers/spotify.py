@@ -7,7 +7,7 @@ from app.models.user import User
 from app.routers.auth import get_current_user, refresh_spotify_token
 from app.internal.spotify_service import SpotifyService
 from app.db.session import get_db
-from app.internal.shuffle_algorithms import basic_shuffle
+from app.internal.shuffle_algorithms import balanced_artist_shuffle, basic_shuffle, mood_based_shuffle, smart_spacing_shuffle, weighted_shuffle
 from app.schemas.spotify import CreatePlaylisRequest, ShuffleRequest
 
 router = APIRouter(prefix="/spotify", tags=["spotify"])
@@ -77,8 +77,17 @@ async def shuffle_playlist(
     """Shuffle the tracks in a playlist"""
     try:
         tracks = await spotify_service.get_all_playlist_tracks(request.playlist_id)
-        if(request.shuffle_algorithm == "basic_shuffle"):
+        if request.shuffle_algorithm == "basic_shuffle":
             basic_shuffle(tracks)
+        elif request.shuffle_algorithm == "balanced_artist":
+            balanced_artist_shuffle(tracks)
+        elif request.shuffle_algorithm == "mood_based":
+            await mood_based_shuffle(tracks, spotify_service)
+        elif request.shuffle_algorithm == "smart_spacing":
+            smart_spacing_shuffle(tracks, min_gap=3)
+        elif request.shuffle_algorithm == "weighted":
+            weighted_shuffle(tracks)
+
         return tracks
     except Exception as e:
         raise HTTPException(

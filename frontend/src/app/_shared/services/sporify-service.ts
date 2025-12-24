@@ -28,8 +28,11 @@ export class SpotifyService {
     );
   }
 
-  shufflePlaylist(playlist_id: string): Observable<TrackItem[]> {
-    return this.http.post<TrackItem[]>(`${this.apiUrl}/spotify/playlists/shuffle`, { playlist_id });
+  shufflePlaylist(playlist_id: string, shuffle_algorithm: string): Observable<TrackItem[]> {
+    return this.http.post<TrackItem[]>(`${this.apiUrl}/spotify/playlists/shuffle`, {
+      playlist_id,
+      shuffle_algorithm,
+    });
   }
 
   createShuffledPlaylist(playlist_name: string, tracks_urls: string[]): Observable<Playlist> {

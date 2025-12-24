@@ -13,6 +13,7 @@ export namespace PlaylistActions {
 
   export class ShufflePlaylist {
     static readonly type = '[Playlist] Shuffle Playlist';
+    constructor(public algorithm: string) {}
   }
 
   export class SaveToSpotify {
