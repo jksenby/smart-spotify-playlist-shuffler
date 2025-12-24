@@ -1,23 +1,36 @@
-import { Track } from '@app/_shared/models/spotify.model';
+// frontend/src/app/store/playlist/playlist.actions.ts
+import { Track, TrackItem } from '@app/_shared/models/spotify.model';
 
-export namespace Playlist {
-  export class Load {
-    static readonly type = '[Playlist] Load Tracks';
-  }
-  export class Add {
-    static readonly type = '[Playlist] Add Track';
-    constructor(public payload: { title: string; artist: string }) {}
-  }
-  export class Shuffle {
-    static readonly type = '[Playlist] Shuffle';
-  }
-
-  export class ImportFromSpotify {
-    static readonly type = '[Playlist] Import from Spotify';
+export namespace PlaylistActions {
+  export class ImportPlaylist {
+    static readonly type = '[Playlist] Import Playlist';
     constructor(public playlistId: string) {}
   }
-  export class ImportFromFile {
-    static readonly type = '[Playlist] Import from File';
-    constructor(public tracks: Track[]) {}
+
+  export class LoadCurrentPlaylist {
+    static readonly type = '[Playlist] Load Current Playlist';
+  }
+
+  export class ShufflePlaylist {
+    static readonly type = '[Playlist] Shuffle Playlist';
+  }
+
+  export class SaveToSpotify {
+    static readonly type = '[Playlist] Save To Spotify';
+    constructor(public playlistName: string) {}
+  }
+
+  export class ClearPlaylist {
+    static readonly type = '[Playlist] Clear Playlist';
+  }
+
+  export class AddTrack {
+    static readonly type = '[Playlist] Add Track';
+    constructor(public track: TrackItem) {}
+  }
+
+  export class RemoveTrack {
+    static readonly type = '[Playlist] Remove Track';
+    constructor(public trackId: string) {}
   }
 }

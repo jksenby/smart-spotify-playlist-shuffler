@@ -1,8 +1,3 @@
-export interface PlaylistModel {
-  title: string;
-  artist: string;
-}
-
 export interface Track {
   album_type: string;
   artists: Array<Artist>;
@@ -87,15 +82,7 @@ export interface Playlist {
   owner: User;
   public: boolean;
   snapshot_id: string;
-  tracks: {
-    href: string;
-    limit: number;
-    next: string;
-    offset: number;
-    previous: string;
-    total: number;
-    items: Array<TrackItem>;
-  };
+  tracks: PlaylistTracks;
   type: string;
   uri: string;
 }
@@ -152,4 +139,14 @@ export interface Copyright {
 
 export interface Restriction {
   reason: string;
+}
+
+export interface PlaylistTracks {
+  href: string;
+  limit: number;
+  next: string;
+  offset: number;
+  previous: string;
+  total: number;
+  items: Array<TrackItem>;
 }

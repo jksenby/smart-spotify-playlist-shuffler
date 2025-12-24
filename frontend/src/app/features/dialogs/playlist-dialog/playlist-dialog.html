@@ -48,14 +48,14 @@
                 <div class="col duration">Duration</div>
               </div>
 
-            @for (item of playlist.tracks.items; track item.track.id; let i = $index) {
-              <div class="track-row">
-                <div class="col index">{{ i + 1 }}</div>
-                <div class="col title">{{ item.track.name }}</div>
-                <div class="col artist">{{ getArtistNames(item.track.artists) }}</div>
-                <div class="col duration">{{ formatDuration(item.track.duration_ms) }}</div>
-              </div>
-            }
+              @for (item of playlist.tracks.items; track item.track.id; let i = $index) {
+                <div class="track-row">
+                  <div class="col index">{{ i + 1 }}</div>
+                  <div class="col title">{{ item.track.name }}</div>
+                  <div class="col artist">{{ getArtistNames(item.track.artists) }}</div>
+                  <div class="col duration">{{ formatDuration(item.track.duration_ms) }}</div>
+                </div>
+              }
             </div>
           }
 

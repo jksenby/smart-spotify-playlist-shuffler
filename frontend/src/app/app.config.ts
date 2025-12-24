@@ -33,6 +33,6 @@ export const appConfig: ApplicationConfig = {
     withNgxsLoggerPlugin(),
     withNgxsReduxDevtoolsPlugin(),
     withNgxsStoragePlugin({ keys: '*' }),
-    {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2500}}
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
   ],
 };

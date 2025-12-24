@@ -43,6 +43,33 @@ async def get_user_playlists(spotify_service: SpotifyService = Depends(get_spoti
             detail=f"Failed to fetch playlists: {str(e)}"
         )
 
+@router.get("/playlists/current")
+async def get_user_current_playlist(spotify_service: SpotifyService = Depends(get_spotify_service), current_user: User = Depends(get_current_user)):
+    """Get user's current playlist"""
+    try:
+        if not current_user.current_playlist_id:
+            return {
+                "message": "No current playlist found",
+                "playlist": None
+            }
+        print(current_user.current_playlist_id)
+        playlist = await spotify_service.get_playlist(current_user.current_playlist_id)
+        print(playlist)
+        tracks = await spotify_service.get_all_playlist_tracks(current_user.current_playlist_id)
+        print(tracks)
+        
+        return {
+            "message": "Current playlist found",
+            "playlist": playlist,
+            "tracks": tracks,
+            "tracks_count": len(tracks)
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Playlist not found: {str(e)}"
+        )
+
 @router.get("/playlists/{playlist_id}")
 async def get_playlist_details(
     playlist_id: str, 
@@ -77,20 +104,21 @@ async def get_playlist_tracks(
 async def import_playlist(
     playlist_id: str,
     spotify_service: SpotifyService = Depends(get_spotify_service),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     """Import a playlist and its tracks to the database"""
     try:
         playlist = await spotify_service.get_playlist(playlist_id)
         tracks = await spotify_service.get_all_playlist_tracks(playlist_id)
 
+        current_user.current_playlist_id = playlist_id
+        db.commit()
+
         return {
             "message": "Playlist imported successfully",
-            "playlist": {
-                "id": playlist.get("id"),
-                "name": playlist.get("name"),
-                "description": playlist.get("description"),
-                "total_tracks": len(tracks)
-            },
+            "playlist": playlist,
+            "tracks": tracks,            
             "tracks_count": len(tracks)
         }
     except Exception as e:

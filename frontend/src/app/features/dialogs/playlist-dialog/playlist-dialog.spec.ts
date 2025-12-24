@@ -8,9 +8,8 @@ describe('PlaylistDialog', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PlaylistDialog]
-    })
-    .compileComponents();
+      imports: [PlaylistDialog],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PlaylistDialog);
     component = fixture.componentInstance;

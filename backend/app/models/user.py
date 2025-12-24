@@ -17,6 +17,7 @@ class User(Base):
     images: Mapped[list | None] = mapped_column(JSON, nullable=True)
     followers: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     external_urls: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    current_playlist_id: Mapped[str | None] = mapped_column(String, nullable=True)
 
     spotify_access_token: Mapped[str | None] = mapped_column(String, nullable=True)
     spotify_refresh_token: Mapped[str | None] = mapped_column(String, nullable=True)
