@@ -109,13 +109,13 @@ export class PlaylistState {
   shufflePlaylist(ctx: StateContext<PlaylistStateModel>) {
     const state = ctx.getState();
 
-    if (!state.currentTracks.length) {
+    if (!state.currentTracks.length || !state.currentPlaylist) {
       return;
     }
 
     ctx.patchState({ shuffling: true, error: null });
 
-    return this.spotifyService.shufflePlaylist(state.currentTracks).pipe(
+    return this.spotifyService.shufflePlaylist(state.currentPlaylist.id).pipe(
       tap((shuffledTracks) => {
         ctx.patchState({
           currentTracks: shuffledTracks,
@@ -142,20 +142,20 @@ export class PlaylistState {
 
     ctx.patchState({ saving: true, error: null });
 
-    return this.spotifyService
-      .createShuffledPlaylist(action.playlistName, state.currentTracks)
-      .pipe(
-        tap(() => {
-          ctx.patchState({ saving: false });
-        }),
-        catchError((error) => {
-          ctx.patchState({
-            saving: false,
-            error: 'Failed to create playlist',
-          });
-          return throwError(() => error);
-        }),
-      );
+    const trackUrls = state.currentTracks.map((item) => item.track.uri);
+
+    return this.spotifyService.createShuffledPlaylist(action.playlistName, trackUrls).pipe(
+      tap(() => {
+        ctx.patchState({ saving: false });
+      }),
+      catchError((error) => {
+        ctx.patchState({
+          saving: false,
+          error: 'Failed to create playlist',
+        });
+        return throwError(() => error);
+      }),
+    );
   }
 
   @Action(PlaylistActions.ClearPlaylist)

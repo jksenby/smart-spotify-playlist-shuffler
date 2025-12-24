@@ -34,3 +34,17 @@ class TrackResponse(BaseModel):
     
     class Config:
         from_attributes = True
+
+class ShuffleRequest(BaseModel):
+    playlist_id: str
+    shuffle_algorithm: Optional[str] = "basic_shuffle"
+
+    class Config:
+        from_attributes = True
+
+class CreatePlaylisRequest(BaseModel):
+    playlist_name: str
+    tracks_urls: List[str]
+
+    class Config:
+        from_attributes = True

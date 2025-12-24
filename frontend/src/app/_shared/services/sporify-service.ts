@@ -28,14 +28,14 @@ export class SpotifyService {
     );
   }
 
-  shufflePlaylist(tracks: TrackItem[]): Observable<TrackItem[]> {
-    return this.http.post<TrackItem[]>(`${this.apiUrl}/spotify/playlists/shuffle`, { tracks });
+  shufflePlaylist(playlist_id: string): Observable<TrackItem[]> {
+    return this.http.post<TrackItem[]>(`${this.apiUrl}/spotify/playlists/shuffle`, { playlist_id });
   }
 
-  createShuffledPlaylist(playlistName: string, tracks: TrackItem[]): Observable<Playlist> {
+  createShuffledPlaylist(playlist_name: string, tracks_urls: string[]): Observable<Playlist> {
     return this.http.post<Playlist>(`${this.apiUrl}/spotify/playlists/create`, {
-      name: playlistName,
-      tracks,
+      playlist_name,
+      tracks_urls,
     });
   }
 

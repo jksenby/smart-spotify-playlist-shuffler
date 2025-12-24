@@ -7,6 +7,8 @@ from app.models.user import User
 from app.routers.auth import get_current_user, refresh_spotify_token
 from app.internal.spotify_service import SpotifyService
 from app.db.session import get_db
+from app.internal.shuffle_algorithms import basic_shuffle
+from app.schemas.spotify import CreatePlaylisRequest, ShuffleRequest
 
 router = APIRouter(prefix="/spotify", tags=["spotify"])
 
@@ -52,11 +54,8 @@ async def get_user_current_playlist(spotify_service: SpotifyService = Depends(ge
                 "message": "No current playlist found",
                 "playlist": None
             }
-        print(current_user.current_playlist_id)
         playlist = await spotify_service.get_playlist(current_user.current_playlist_id)
-        print(playlist)
         tracks = await spotify_service.get_all_playlist_tracks(current_user.current_playlist_id)
-        print(tracks)
         
         return {
             "message": "Current playlist found",
@@ -68,6 +67,40 @@ async def get_user_current_playlist(spotify_service: SpotifyService = Depends(ge
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Playlist not found: {str(e)}"
+        )
+
+@router.post("/playlists/shuffle")
+async def shuffle_playlist(
+    request: ShuffleRequest,
+    spotify_service: SpotifyService = Depends(get_spotify_service)
+):
+    """Shuffle the tracks in a playlist"""
+    try:
+        tracks = await spotify_service.get_all_playlist_tracks(request.playlist_id)
+        if(request.shuffle_algorithm == "basic_shuffle"):
+            basic_shuffle(tracks)
+        return tracks
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Failed to shuffle playlist: {str(e)}"
+        )
+
+@router.post("/playlists/create")
+async def create_playlist(
+    request: CreatePlaylisRequest,
+    spotify_service: SpotifyService = Depends(get_spotify_service),
+    current_user: User = Depends(get_current_user)
+):
+    """Shuffle the tracks in a playlist"""
+    try:
+        playlist = await spotify_service.create_playlist(request.playlist_name, current_user.spotify_id)
+        await spotify_service.add_tracks_to_playlist(playlist["id"], request.tracks_urls)
+        return playlist
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Failed to shuffle playlist: {str(e)}"
         )
 
 @router.get("/playlists/{playlist_id}")

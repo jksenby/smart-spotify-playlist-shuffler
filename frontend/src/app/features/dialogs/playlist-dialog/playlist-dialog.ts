@@ -58,7 +58,6 @@ export class PlaylistDialog implements OnInit {
   }
 
   public onPanelOpened(playlist: Playlist) {
-    console.log(!playlist.tracks.total, !this.loadingTracks.has(playlist.id));
     if (!playlist.tracks.items && !this.loadingTracks.has(playlist.id)) {
       this._spinner.show();
       this._spotifyService.getPlaylistTracks(playlist.id).subscribe({

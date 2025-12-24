@@ -98,3 +98,25 @@ class SpotifyService:
             )
             response.raise_for_status()
             return response.json().get("audio_features", [])
+
+    async def create_playlist(self, playlist_name: str, user_id: str) -> Dict[str, Any]:
+        """Create a new playlist and add tracks to it"""
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"{self.BASE_URL}/users/{user_id}/playlists",
+                headers=self.headers,
+                json={"name": playlist_name, "description": "Playlist created by SSPS" },
+            )
+            response.raise_for_status()
+            return response.json()
+
+    async def add_tracks_to_playlist(self, playlist_id: str, track_urls: List[str]) -> None:
+        """Add tracks to a playlist"""
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"{self.BASE_URL}/playlists/{playlist_id}/tracks",
+                headers=self.headers,
+                json={"uris": track_urls},
+            )
+            response.raise_for_status()
+            return response.json()
