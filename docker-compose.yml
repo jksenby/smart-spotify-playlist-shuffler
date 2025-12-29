@@ -1,4 +1,18 @@
 services:
+  db:
+    image: postgres:18.1-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   backend:
     build: ./backend
     ports:
@@ -7,24 +21,22 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - POSTGRES_SERVER=db
       - POSTGRES_PORT=5432
+      - FRONTEND_URL=${FRONTEND_URL}
+      - SPOTIFY_REDIRECT_URI=${SPOTIFY_REDIRECT_URI}
+      - SPOTIFY_CLIENT_ID=${SPOTIFY_CLIENT_ID}
+      - SPOTIFY_CLIENT_SECRET=${SPOTIFY_CLIENT_SECRET}
+    volumes:
+      - ./ssl-certificates:/app/ssl-certificates:ro
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
   frontend:
     build: ./frontend
     ports:
-      - "4200:80"
+      - "80:80"
+      - "4200:443"
+    volumes:
+      - ./ssl-certificates:/etc/nginx/ssl:ro
     depends_on:
       - backend
-  db:
-    image: postgres:18.1-alpine
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "${POSTGRES_DB}:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-
-volumes:
-  postgres_data: 

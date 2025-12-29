@@ -7,7 +7,6 @@ import asyncio
 from pathlib import Path
 
 from app.db.session import Base, engine
-from app.models import User, Track
 
 Base.metadata.create_all(bind=engine)
 
@@ -35,9 +34,16 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     print(f"Starting FastAPI on port {port} with HTTPS...", flush=True)
     
-    base_dir = Path(__file__).resolve().parent.parent.parent
-    ssl_keyfile = os.path.join(base_dir, "ssl-certificates", "localhost+2-key.pem")
-    ssl_certfile = os.path.join(base_dir, "ssl-certificates", "localhost+2.pem")
+    if os.path.exists("/app/ssl-certificates"):
+        ssl_keyfile = "/app/ssl-certificates/localhost+2-key.pem"
+        ssl_certfile = "/app/ssl-certificates/localhost+2.pem"
+    else:
+        base_dir = Path(__file__).resolve().parent.parent.parent
+        ssl_keyfile = os.path.join(base_dir, "ssl-certificates", "localhost+2-key.pem")
+        ssl_certfile = os.path.join(base_dir, "ssl-certificates", "localhost+2.pem")
+    
+    print(f"SSL Keyfile: {ssl_keyfile}", flush=True)
+    print(f"SSL Certfile: {ssl_certfile}", flush=True)
     
     uvicorn.run(
         app, 
