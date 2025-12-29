@@ -1,13 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SporifyService } from './sporify-service';
+import { SpotifyService } from './sporify-service';
+import { provideHttpClient } from '@angular/common/http';
 
-describe('SporifyService', () => {
-  let service: SporifyService;
+describe('SpotifyService', () => {
+  let service: SpotifyService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(SporifyService);
+    TestBed.configureTestingModule({ providers: [provideHttpClient()] });
+    service = TestBed.inject(SpotifyService);
   });
 
   it('should be created', () => {
