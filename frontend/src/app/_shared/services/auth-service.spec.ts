@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
 import { AuthService } from './auth-service';
-import { environment } from '@env/environment.development';
+import { environment } from '@env/environment';
 import { User } from '../models/spotify.model';
 
 describe('AuthService', () => {

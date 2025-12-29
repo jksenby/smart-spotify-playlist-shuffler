@@ -1,0 +1,68 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'backend/**'
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+        cache-dependency-path: 'backend/requirements.txt'
+    
+    - name: Install dependencies
+      working-directory: ./backend
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install flake8 pylint
+    
+    - name: Lint with flake8
+      working-directory: ./backend
+      run: |
+        # Остановить сборку если есть синтаксические ошибки или неопределенные имена
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Предупреждения о стиле кода (не ломают сборку)
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    
+    - name: Run pylint
+      working-directory: ./backend
+      run: |
+        pylint app/ --exit-zero --max-line-length=127
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Build Docker image
+      working-directory: ./backend
+      run: |
+        docker build -t smart-spotify-backend:${{ github.sha }} .
+        docker image ls
+    
+    - name: Test Docker image
+      run: |
+        docker run --rm smart-spotify-backend:${{ github.sha }} python --version

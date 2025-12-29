@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '@env/environment.development';
+import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
 import { ImportResponse, PlaylistResponse, TracksResponse } from '../models/schemas';
 import { Playlist, Track, TrackItem } from '../models/spotify.model';

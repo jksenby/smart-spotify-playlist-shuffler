@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { environment } from '@env/environment.development';
+import { environment } from '@env/environment';
 import { User } from '../models/spotify.model';
 
 @Injectable({
