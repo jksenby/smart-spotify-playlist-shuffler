@@ -150,10 +150,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
     this.isAuthenticated$
       .pipe(takeUntil(this._destroyed$))
-      .pipe(
-        filter((isAuthenticated) => isAuthenticated),
-        first(),
-      )
+      .pipe(filter((isAuthenticated) => isAuthenticated))
       .subscribe(() => {
         this.store.dispatch(new PlaylistActions.LoadCurrentPlaylist());
       });
