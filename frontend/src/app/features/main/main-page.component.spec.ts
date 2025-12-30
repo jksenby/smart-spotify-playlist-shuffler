@@ -6,7 +6,7 @@ import {
   discardPeriodicTasks,
 } from '@angular/core/testing';
 import { Store } from '@ngxs/store';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BehaviorSubject, of, throwError } from 'rxjs';
@@ -14,6 +14,7 @@ import { MainPageComponent } from './main-page.component';
 import { AuthActions } from '@app/store/auth/auth.actions';
 import { PlaylistActions } from '@app/store/playlist/playlist.actions';
 import { Playlist, User, TrackItem, Artist } from '@app/_shared/models/spotify.model';
+import { PlaylistDialog } from '../dialogs/playlist-dialog/playlist-dialog';
 
 describe('MainPageComponent', () => {
   let component: MainPageComponent;
@@ -28,7 +29,6 @@ describe('MainPageComponent', () => {
   let loadingSubject: BehaviorSubject<boolean>;
   let currentPlaylistSubject: BehaviorSubject<Playlist | null>;
   let currentTracksSubject: BehaviorSubject<TrackItem[]>;
-  let playlistLoadingSubject: BehaviorSubject<boolean>;
   let shufflingSubject: BehaviorSubject<boolean>;
   let savingSubject: BehaviorSubject<boolean>;
   let hasPlaylistSubject: BehaviorSubject<boolean>;
@@ -86,7 +86,6 @@ describe('MainPageComponent', () => {
     loadingSubject = new BehaviorSubject<boolean>(false);
     currentPlaylistSubject = new BehaviorSubject<Playlist | null>(null);
     currentTracksSubject = new BehaviorSubject<TrackItem[]>([]);
-    playlistLoadingSubject = new BehaviorSubject<boolean>(false);
     shufflingSubject = new BehaviorSubject<boolean>(false);
     savingSubject = new BehaviorSubject<boolean>(false);
     hasPlaylistSubject = new BehaviorSubject<boolean>(false);
@@ -96,7 +95,7 @@ describe('MainPageComponent', () => {
     const snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
     const spinnerSpy = jasmine.createSpyObj('NgxSpinnerService', ['show', 'hide']);
 
-    storeSpy.select.and.callFake((selector: any) => {
+    storeSpy.select.and.callFake((selector: { name?: string }) => {
       const selectorName = selector?.name || '';
 
       switch (selectorName) {
@@ -235,7 +234,7 @@ describe('MainPageComponent', () => {
       const dialogRef = {
         afterClosed: () => of(mockPlaylist),
       };
-      dialog.open.and.returnValue(dialogRef as any);
+      dialog.open.and.returnValue(dialogRef as MatDialogRef<PlaylistDialog>);
 
       component.onUploadPlaylist();
 
@@ -246,7 +245,7 @@ describe('MainPageComponent', () => {
       const dialogRef = {
         afterClosed: () => of(mockPlaylist),
       };
-      dialog.open.and.returnValue(dialogRef as any);
+      dialog.open.and.returnValue(dialogRef as MatDialogRef<PlaylistDialog>);
 
       component.onUploadPlaylist();
       tick();
@@ -263,7 +262,7 @@ describe('MainPageComponent', () => {
       const dialogRef = {
         afterClosed: () => of(null),
       };
-      dialog.open.and.returnValue(dialogRef as any);
+      dialog.open.and.returnValue(dialogRef as MatDialogRef<PlaylistDialog>);
       const initialCallCount = store.dispatch.calls.count();
 
       component.onUploadPlaylist();

@@ -1,12 +1,12 @@
 export interface Track {
   album: Album;
   album_type: string;
-  artists: Array<Artist>;
-  available_markets: Array<Market>;
+  artists: Artist[];
+  available_markets: Market[];
   external_urls: ExternalURLs;
   href: string;
   id: string;
-  images: Array<ImageObject>;
+  images: ImageObject[];
   name: string;
   release_date: string;
   release_date_precision: string;
@@ -24,22 +24,22 @@ export interface Track {
 export interface Album {
   album_type: string;
   total_tracks: number;
-  available_markets: Array<string>;
+  available_markets: string[];
   external_urls: ExternalURLs;
   href: string;
   id: string;
-  images: Array<ImageObject>;
+  images: ImageObject[];
   name: string;
   release_date: string;
   release_date_precision: string;
   restrictions: Restriction;
   type: string;
   uri: string;
-  artists: Array<Artist>;
-  tracks: Array<Track>;
-  copyrights: Array<Copyright>;
+  artists: Artist[];
+  tracks: Track[];
+  copyrights: Copyright[];
   external_ids: ExternalIDs;
-  genres: Array<string>;
+  genres: string[];
   label: string;
   popularity: number;
 }
@@ -47,10 +47,10 @@ export interface Album {
 export interface Artist {
   external_urls: ExternalURLs;
   followers: Followers;
-  genres: Array<string>;
+  genres: string[];
   href: string;
   id: string;
-  images: Array<ImageObject>;
+  images: ImageObject[];
   name: string;
   popularity: number;
   type: string;
@@ -66,7 +66,7 @@ export interface User {
   followers: Followers;
   href: string;
   id: string;
-  images: Array<ImageObject>;
+  images: ImageObject[];
   product: string;
   type: string;
   uri: string;
@@ -78,7 +78,7 @@ export interface Playlist {
   external_urls: ExternalURLs;
   href: string;
   id: string;
-  images: Array<ImageObject>;
+  images: ImageObject[];
   name: string;
   owner: User;
   public: boolean;
@@ -149,5 +149,5 @@ export interface PlaylistTracks {
   offset: number;
   previous: string;
   total: number;
-  items: Array<TrackItem>;
+  items: TrackItem[];
 }

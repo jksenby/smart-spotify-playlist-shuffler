@@ -8,7 +8,6 @@ import { User } from '../models/spotify.model';
 describe('AuthService', () => {
   let service: AuthService;
   let httpMock: HttpTestingController;
-  let routerSpy: jasmine.SpyObj<Router>;
 
   const mockUser: User = {
     id: '123',
@@ -43,7 +42,6 @@ describe('AuthService', () => {
 
     service = TestBed.inject(AuthService);
     httpMock = TestBed.inject(HttpTestingController);
-    routerSpy = TestBed.inject(Router) as jasmine.SpyObj<Router>;
 
     sessionStorage.clear();
   });

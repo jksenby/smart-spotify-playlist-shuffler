@@ -11,13 +11,19 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { AuthActions } from '@app/store/auth/auth.actions';
+import { Login, Logout, GetCurrentUser } from '@app/store/auth/auth.actions';
+import {
+  SaveToSpotify,
+  ShufflePlaylist,
+  LoadCurrentPlaylist,
+  ImportPlaylist,
+  ClearPlaylist,
+} from '@app/store/playlist/playlist.actions';
 import { AuthState } from '@app/store/auth/auth.state';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
-import { Artist, Playlist, Track, TrackItem, User } from '@app/_shared/models/spotify.model';
+import { Artist, Playlist, TrackItem, User } from '@app/_shared/models/spotify.model';
 import { PlaylistDialog } from '@app/features/dialogs/playlist-dialog/playlist-dialog';
 import { PlaylistState } from '@app/store/playlist/playlist.state';
-import { PlaylistActions } from '@app/store/playlist/playlist.actions';
 
 @Component({
   selector: 'app-main-page',
@@ -58,15 +64,10 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   private readonly _destroyed$ = new Subject<void>();
 
-  public newArtist: string = '';
-  public newTitle: string = '';
-
-  public onAdd() {}
-
-  public onShuffle(algorithm: string = 'basic_shuffle') {
-    this.store.dispatch(new PlaylistActions.ShufflePlaylist(algorithm)).subscribe({
+  public onShuffle(algorithm = 'basic_shuffle') {
+    this.store.dispatch(new ShufflePlaylist(algorithm)).subscribe({
       next: () => {
-        const algorithmNames: { [key: string]: string } = {
+        const algorithmNames: Record<string, string> = {
           basic_shuffle: 'Basic Shuffle',
           balanced_artist: 'Balanced Artist',
           smart_spacing: 'Smart Spacing',
@@ -83,7 +84,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   public onSaveToSpotify() {
-    let playlistName: string = '';
+    let playlistName = '';
 
     this.currentPlaylist$.pipe(takeUntil(this._destroyed$)).subscribe((playlist) => {
       if (playlist) {
@@ -93,7 +94,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
     if (!playlistName) return;
 
-    this.store.dispatch(new PlaylistActions.SaveToSpotify(playlistName)).subscribe({
+    this.store.dispatch(new SaveToSpotify(playlistName)).subscribe({
       next: () => {
         this.snackBar.open(`Playlist ${playlistName} saved to Spotify!`, 'Close');
       },
@@ -117,7 +118,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
       .subscribe((response: Playlist) => {
         console.log(response);
 
-        this.store.dispatch(new PlaylistActions.ImportPlaylist(response.id)).subscribe({
+        this.store.dispatch(new ImportPlaylist(response.id)).subscribe({
           next: () => {
             this.snackBar.open(`${response.name} uploaded!`, 'Close');
           },
@@ -129,16 +130,16 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   public onLogin() {
-    this.store.dispatch(new AuthActions.Login());
+    this.store.dispatch(new Login());
   }
 
   public onLogout() {
-    this.store.dispatch(new AuthActions.Logout());
-    this.store.dispatch(new PlaylistActions.ClearPlaylist());
+    this.store.dispatch(new Logout());
+    this.store.dispatch(new ClearPlaylist());
   }
 
   ngOnInit(): void {
-    this.store.dispatch(new AuthActions.GetCurrentUser());
+    this.store.dispatch(new GetCurrentUser());
 
     this.loading$.pipe(takeUntil(this._destroyed$)).subscribe((isLoading) => {
       if (isLoading) {
@@ -152,7 +153,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._destroyed$))
       .pipe(filter((isAuthenticated) => isAuthenticated))
       .subscribe(() => {
-        this.store.dispatch(new PlaylistActions.LoadCurrentPlaylist());
+        this.store.dispatch(new LoadCurrentPlaylist());
       });
   }
 

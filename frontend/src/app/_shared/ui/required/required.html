@@ -2,10 +2,12 @@
   <div>This field must be fielld</div>
 }
 @if (control()?.errors?.['email'] && control()?.touched) {
-  <div *ngIf="control()?.errors?.['email'] && control()?.touched">This field must be email</div>
+  @if (control()?.errors?.['email'] && control()?.touched) {
+    <div>This field must be email</div>
+  }
 }
 @if (control()?.errors?.['minlength'] && control()?.touched) {
-  <div *ngIf="control()?.errors?.['minlength'] && control()?.touched">
-    This field must be at least 8 symbols
-  </div>
+  @if (control()?.errors?.['minlength'] && control()?.touched) {
+    <div>This field must be at least 8 symbols</div>
+  }
 }

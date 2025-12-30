@@ -1,11 +1,10 @@
-import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
-import { AbstractControl, FormControl } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-required',
-  imports: [MatFormFieldModule, CommonModule],
+  imports: [MatFormFieldModule],
   templateUrl: './required.html',
   styleUrl: './required.scss',
 })

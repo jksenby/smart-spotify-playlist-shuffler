@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { AuthModel } from '@app/_shared/models/auth.model';
 import { AuthService } from '@app/_shared/services/auth-service';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { AuthActions } from './auth.actions';
+import { Login, Logout, GetCurrentUser } from './auth.actions';
 import { User } from '@app/_shared/models/spotify.model';
 import { catchError, tap, throwError } from 'rxjs';
 
@@ -16,7 +16,7 @@ import { catchError, tap, throwError } from 'rxjs';
 })
 @Injectable()
 export class AuthState {
-  constructor(private authService: AuthService) {}
+  private authService = inject(AuthService);
 
   @Selector()
   static isAuthenticated(state: AuthModel): boolean {
@@ -38,12 +38,12 @@ export class AuthState {
     return state.error;
   }
 
-  @Action(AuthActions.Login)
-  login(ctx: StateContext<AuthModel>) {
+  @Action(Login)
+  login() {
     return this.authService.login();
   }
 
-  @Action(AuthActions.Logout)
+  @Action(Logout)
   logout(ctx: StateContext<AuthModel>) {
     return this.authService.logout().pipe(
       tap(() => {
@@ -56,10 +56,10 @@ export class AuthState {
     );
   }
 
-  @Action(AuthActions.GetCurrentUser)
+  @Action(GetCurrentUser)
   getCurrentUser(ctx: StateContext<AuthModel>) {
     return this.authService.getCurrentUser().pipe(
-      tap((user: User) => {
+      tap((user: User | null) => {
         ctx.patchState({
           user: user,
           loading: false,

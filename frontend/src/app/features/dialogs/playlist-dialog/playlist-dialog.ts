@@ -31,7 +31,7 @@ export class PlaylistDialog implements OnInit {
 
   public playlists$: Observable<Playlist[]> | null = null;
   public loadingTracks = new Set<string>();
-  public totalPlaylists: number = 0;
+  public totalPlaylists = 0;
 
   ngOnInit(): void {
     this._spinner.show();

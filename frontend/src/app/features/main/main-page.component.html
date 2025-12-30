@@ -64,7 +64,7 @@
           [matMenuTriggerFor]="shuffleMenu"
           color="primary"
           class="rounded-full! font-bold! px-8! py-6!"
-          [disabled]="(shuffling$ | async) || !(hasPlaylist$ | async)"
+          [disabled]="(shuffling$ | async) || (hasPlaylist$ | async) === false"
         >
           @if (shuffling$ | async) {
             <div class="flex items-center gap-2">
@@ -107,7 +107,7 @@
           color="primary"
           class="rounded-full! font-bold!"
           (click)="onUploadPlaylist()"
-          [disabled]="!(isAuthenticated$ | async)"
+          [disabled]="(isAuthenticated$ | async) === false"
         >
           <mat-icon>playlist_add</mat-icon>
           <span>Upload Playlist</span>
@@ -140,7 +140,7 @@
           color="accent"
           class="rounded-full! font-bold!"
           (click)="onSaveToSpotify()"
-          [disabled]="(saving$ | async) || !(hasPlaylist$ | async)"
+          [disabled]="(saving$ | async) || (hasPlaylist$ | async) === false"
         >
           @if (saving$ | async) {
             <div class="flex items-center gap-2">
@@ -156,7 +156,7 @@
         </button>
       </div>
     }
-    
+
     <div class="pb-6">
       @if ((currentTracks$ | async)?.length === 0) {
         <div class="py-16 text-center">
@@ -193,7 +193,9 @@
           </div>
 
           <div class="flex-1 text-center">
-            <div class="text-sm text-(--mat-sys-on-surface-variant) truncate group-hover:text-white transition-colors">
+            <div
+              class="text-sm text-(--mat-sys-on-surface-variant) truncate group-hover:text-white transition-colors"
+            >
               {{ item.track.album.name }}
             </div>
           </div>

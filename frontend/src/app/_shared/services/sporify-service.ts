@@ -1,17 +1,16 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
 import { ImportResponse, PlaylistResponse, TracksResponse } from '../models/schemas';
-import { Playlist, Track, TrackItem } from '../models/spotify.model';
+import { Playlist, TrackItem } from '../models/spotify.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SpotifyService {
+  private http = inject(HttpClient);
   private apiUrl = environment.API_URL;
-
-  constructor(private http: HttpClient) {}
 
   getUserPlaylists(): Observable<PlaylistResponse> {
     return this.http.get<PlaylistResponse>(`${this.apiUrl}/spotify/playlists`);

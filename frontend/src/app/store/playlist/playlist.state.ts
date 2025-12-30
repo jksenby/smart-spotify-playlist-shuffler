@@ -1,10 +1,18 @@
 import { inject, Injectable } from '@angular/core';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
-import { Playlist, Track, TrackItem } from '@app/_shared/models/spotify.model';
+import { Playlist, TrackItem } from '@app/_shared/models/spotify.model';
 import { SpotifyService } from '@app/_shared/services/sporify-service';
 import { tap, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
-import { PlaylistActions } from './playlist.actions';
+import {
+  SaveToSpotify,
+  ShufflePlaylist,
+  ClearPlaylist,
+  AddTrack,
+  RemoveTrack,
+  LoadCurrentPlaylist,
+  ImportPlaylist,
+} from './playlist.actions';
 
 export interface PlaylistStateModel {
   currentPlaylist: Playlist | null;
@@ -65,8 +73,8 @@ export class PlaylistState {
     return state.currentPlaylist !== null && state.currentTracks.length > 0;
   }
 
-  @Action(PlaylistActions.ImportPlaylist)
-  importPlaylist(ctx: StateContext<PlaylistStateModel>, action: PlaylistActions.ImportPlaylist) {
+  @Action(ImportPlaylist)
+  importPlaylist(ctx: StateContext<PlaylistStateModel>, action: ImportPlaylist) {
     ctx.patchState({ loading: true, error: null });
     return this.spotifyService.importPlaylist(action.playlistId).pipe(
       tap((response) => {
@@ -86,7 +94,7 @@ export class PlaylistState {
     );
   }
 
-  @Action(PlaylistActions.LoadCurrentPlaylist)
+  @Action(LoadCurrentPlaylist)
   loadCurrentPlaylist(ctx: StateContext<PlaylistStateModel>) {
     ctx.patchState({ loading: true, error: null });
 
@@ -105,8 +113,8 @@ export class PlaylistState {
     );
   }
 
-  @Action(PlaylistActions.ShufflePlaylist)
-  shufflePlaylist(ctx: StateContext<PlaylistStateModel>, action: PlaylistActions.ShufflePlaylist) {
+  @Action(ShufflePlaylist)
+  shufflePlaylist(ctx: StateContext<PlaylistStateModel>, action: ShufflePlaylist) {
     const state = ctx.getState();
 
     if (!state.currentTracks.length || !state.currentPlaylist) {
@@ -132,8 +140,8 @@ export class PlaylistState {
     );
   }
 
-  @Action(PlaylistActions.SaveToSpotify)
-  saveToSpotify(ctx: StateContext<PlaylistStateModel>, action: PlaylistActions.SaveToSpotify) {
+  @Action(SaveToSpotify)
+  saveToSpotify(ctx: StateContext<PlaylistStateModel>, action: SaveToSpotify) {
     const state = ctx.getState();
 
     if (!state.currentPlaylist || !state.currentTracks.length) {
@@ -158,7 +166,7 @@ export class PlaylistState {
     );
   }
 
-  @Action(PlaylistActions.ClearPlaylist)
+  @Action(ClearPlaylist)
   clearPlaylist(ctx: StateContext<PlaylistStateModel>) {
     ctx.patchState({
       currentPlaylist: null,
@@ -167,16 +175,16 @@ export class PlaylistState {
     });
   }
 
-  @Action(PlaylistActions.AddTrack)
-  addTrack(ctx: StateContext<PlaylistStateModel>, action: PlaylistActions.AddTrack) {
+  @Action(AddTrack)
+  addTrack(ctx: StateContext<PlaylistStateModel>, action: AddTrack) {
     const state = ctx.getState();
     ctx.patchState({
       currentTracks: [...state.currentTracks, action.track],
     });
   }
 
-  @Action(PlaylistActions.RemoveTrack)
-  removeTrack(ctx: StateContext<PlaylistStateModel>, action: PlaylistActions.RemoveTrack) {
+  @Action(RemoveTrack)
+  removeTrack(ctx: StateContext<PlaylistStateModel>, action: RemoveTrack) {
     const state = ctx.getState();
     ctx.patchState({
       currentTracks: state.currentTracks.filter((t) => t.track.id !== action.trackId),
