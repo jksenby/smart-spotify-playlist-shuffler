@@ -16,7 +16,7 @@ def balanced_artist_shuffle(tracks: List[Dict[str, any]]):
 
     artist_groups = {}
     for track in tracks:
-        artist = track["track"]["artists"][0]["name"]
+        artist = track['track']['artists'][0]['name']
         if artist not in artist_groups:
             artist_groups[artist] = []
         artist_groups[artist].append(track)
@@ -45,9 +45,7 @@ async def mood_based_shuffle(tracks: List[Dict[str, Any]], spotify_service):
         return tracks
 
     track_ids = [
-        track["track"]["id"]
-        for track in tracks
-        if track.get("track") and track["track"].get("id")
+        track['track']['id'] for track in tracks if track.get('track') and track['track'].get('id')
     ]
 
     if not track_ids:
@@ -61,20 +59,20 @@ async def mood_based_shuffle(tracks: List[Dict[str, Any]], spotify_service):
             audio_features = await spotify_service.get_audio_features(batch_ids)
             all_audio_features.extend(audio_features)
         except Exception as e:
-            print(f"Error fetching audio features: {e}")
+            print(f'Error fetching audio features: {e}')
             pass
 
     features_map = {}
     for features in all_audio_features:
         if features:
-            features_map[features["id"]] = features
+            features_map[features['id']] = features
 
     track_feature_pairs = []
     for track in tracks:
-        track_id = track["track"]["id"]
+        track_id = track['track']['id']
         if track_id in features_map:
             features = features_map[track_id]
-            track_feature_pairs.append((track, features["energy"], features["valence"]))
+            track_feature_pairs.append((track, features['energy'], features['valence']))
         else:
             track_feature_pairs.append((track, 0.5, 0.5))
 
@@ -84,12 +82,12 @@ async def mood_based_shuffle(tracks: List[Dict[str, Any]], spotify_service):
     return track
 
 
-def weighted_shuffle(tracks: List[Dict[str, any]], weight_key="popularity"):
+def weighted_shuffle(tracks: List[Dict[str, any]], weight_key='popularity'):
     """Shuffle with weighted probability based on track popularity"""
     if not tracks:
         return tracks
 
-    weights = [track["track"].get(weight_key, 50) for track in tracks]
+    weights = [track['track'].get(weight_key, 50) for track in tracks]
 
     total_weight = sum(weights)
     if total_weight > 0:
@@ -101,9 +99,7 @@ def weighted_shuffle(tracks: List[Dict[str, any]], weight_key="popularity"):
     shuffled_indices = []
 
     while indices:
-        chosen_idx = random.choices(
-            indices, weights=[probabilities[i] for i in indices]
-        )[0]
+        chosen_idx = random.choices(indices, weights=[probabilities[i] for i in indices])[0]
         shuffled_indices.append(chosen_idx)
         indices.remove(chosen_idx)
 
@@ -123,11 +119,9 @@ def smart_spacing_shuffle(tracks: List[Dict[str, any]], min_gap=3):
 
     while remaining:
         for i, track in enumerate(remaining):
-            artist = track["track"]["artists"][0]["name"]
+            artist = track['track']['artists'][0]['name']
 
-            recent_artists = [
-                t["track"]["artists"][0]["name"] for t in result[-min_gap:]
-            ]
+            recent_artists = [t['track']['artists'][0]['name'] for t in result[-min_gap:]]
 
             if artist not in recent_artists or len(remaining) == 1:
                 result.append(track)

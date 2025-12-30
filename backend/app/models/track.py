@@ -8,12 +8,12 @@ if TYPE_CHECKING:
 
 
 class Track(Base):
-    __tablename__ = "tracks"
+    __tablename__ = 'tracks'
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     title: Mapped[str] = mapped_column(index=True)
     artist: Mapped[str] = mapped_column(index=True)
     position: Mapped[int] = mapped_column(index=True)
-    owner_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    owner_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
 
-    owner: Mapped["User"] = relationship("User", back_populates="tracks")
+    owner: Mapped['User'] = relationship('User', back_populates='tracks')

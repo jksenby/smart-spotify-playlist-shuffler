@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { Playlist, TrackItem } from '@app/_shared/models/spotify.model';
-import { SpotifyService } from '@app/_shared/services/sporify-service';
+import { SpotifyService } from '@app/_shared/services/spotify-service';
 import { tap, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import {

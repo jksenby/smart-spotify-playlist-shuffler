@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SpotifyService } from './sporify-service';
+import { SpotifyService } from './spotify-service';
 import { provideHttpClient } from '@angular/common/http';
 
 describe('SpotifyService', () => {

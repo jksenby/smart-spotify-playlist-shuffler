@@ -16,7 +16,7 @@ from app.internal.shuffle_algorithms import (
 )
 from app.schemas.spotify import CreatePlaylisRequest, ShuffleRequest
 
-router = APIRouter(prefix="/spotify", tags=["spotify"])
+router = APIRouter(prefix='/spotify', tags=['spotify'])
 
 
 async def get_spotify_service(
@@ -26,7 +26,7 @@ async def get_spotify_service(
     if not current_user.spotify_access_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="No Spotify access token found. Please re-authenticate",
+            detail='No Spotify access token found. Please re-authenticate',
         )
     current_time = int(time.time())
     if (
@@ -38,7 +38,7 @@ async def get_spotify_service(
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail=f"Failed to refresh token: {str(e)}",
+                detail=f'Failed to refresh token: {str(e)}',
             )
     else:
         access_token = current_user.spotify_access_token
@@ -46,22 +46,22 @@ async def get_spotify_service(
     return SpotifyService(access_token=access_token)
 
 
-@router.get("/playlists")
+@router.get('/playlists')
 async def get_user_playlists(
     spotify_service: SpotifyService = Depends(get_spotify_service),
 ):
     """Get all playlists for the authenticated user"""
     try:
         playlists = await spotify_service.get_all_user_playlists()
-        return {"playlists": playlists, "total": len(playlists)}
+        return {'playlists': playlists, 'total': len(playlists)}
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to fetch playlists: {str(e)}",
+            detail=f'Failed to fetch playlists: {str(e)}',
         )
 
 
-@router.get("/playlists/current")
+@router.get('/playlists/current')
 async def get_user_current_playlist(
     spotify_service: SpotifyService = Depends(get_spotify_service),
     current_user: User = Depends(get_current_user),
@@ -69,26 +69,24 @@ async def get_user_current_playlist(
     """Get user's current playlist"""
     try:
         if not current_user.current_playlist_id:
-            return {"message": "No current playlist found", "playlist": None}
+            return {'message': 'No current playlist found', 'playlist': None}
         playlist = await spotify_service.get_playlist(current_user.current_playlist_id)
-        tracks = await spotify_service.get_all_playlist_tracks(
-            current_user.current_playlist_id
-        )
+        tracks = await spotify_service.get_all_playlist_tracks(current_user.current_playlist_id)
 
         return {
-            "message": "Current playlist found",
-            "playlist": playlist,
-            "tracks": tracks,
-            "tracks_count": len(tracks),
+            'message': 'Current playlist found',
+            'playlist': playlist,
+            'tracks': tracks,
+            'tracks_count': len(tracks),
         }
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Playlist not found: {str(e)}",
+            detail=f'Playlist not found: {str(e)}',
         )
 
 
-@router.post("/playlists/shuffle")
+@router.post('/playlists/shuffle')
 async def shuffle_playlist(
     request: ShuffleRequest,
     spotify_service: SpotifyService = Depends(get_spotify_service),
@@ -96,25 +94,23 @@ async def shuffle_playlist(
     """Shuffle the tracks in a playlist"""
     try:
         tracks = await spotify_service.get_all_playlist_tracks(request.playlist_id)
-        if request.shuffle_algorithm == "basic_shuffle":
+        if request.shuffle_algorithm == 'basic_shuffle':
             basic_shuffle(tracks)
-        elif request.shuffle_algorithm == "balanced_artist":
+        elif request.shuffle_algorithm == 'balanced_artist':
             balanced_artist_shuffle(tracks)
-        elif request.shuffle_algorithm == "mood_based":
+        elif request.shuffle_algorithm == 'mood_based':
             await mood_based_shuffle(tracks, spotify_service)
-        elif request.shuffle_algorithm == "smart_spacing":
+        elif request.shuffle_algorithm == 'smart_spacing':
             smart_spacing_shuffle(tracks, min_gap=3)
-        elif request.shuffle_algorithm == "weighted":
+        elif request.shuffle_algorithm == 'weighted':
             weighted_shuffle(tracks)
 
         return tracks
     except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Failed to shuffle playlist: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f'Failed to shuffle playlist: {str(e)}')
 
 
-@router.post("/playlists/create")
+@router.post('/playlists/create')
 async def create_playlist(
     request: CreatePlaylisRequest,
     spotify_service: SpotifyService = Depends(get_spotify_service),
@@ -125,17 +121,13 @@ async def create_playlist(
         playlist = await spotify_service.create_playlist(
             request.playlist_name, current_user.spotify_id
         )
-        await spotify_service.add_tracks_to_playlist(
-            playlist["id"], request.tracks_urls
-        )
+        await spotify_service.add_tracks_to_playlist(playlist['id'], request.tracks_urls)
         return playlist
     except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Failed to shuffle playlist: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f'Failed to shuffle playlist: {str(e)}')
 
 
-@router.get("/playlists/{playlist_id}")
+@router.get('/playlists/{playlist_id}')
 async def get_playlist_details(
     playlist_id: str, spotify_service: SpotifyService = Depends(get_spotify_service)
 ):
@@ -146,26 +138,26 @@ async def get_playlist_details(
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Playlist not found: {str(e)}",
+            detail=f'Playlist not found: {str(e)}',
         )
 
 
-@router.get("/playlists/{playlist_id}/tracks")
+@router.get('/playlists/{playlist_id}/tracks')
 async def get_playlist_tracks(
     playlist_id: str, spotify_service: SpotifyService = Depends(get_spotify_service)
 ):
     """Get tracks from a specific playlist"""
     try:
         tracks = await spotify_service.get_all_playlist_tracks(playlist_id)
-        return {"tracks": tracks, "total": len(tracks)}
+        return {'tracks': tracks, 'total': len(tracks)}
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to fetch playlist tracks: {str(e)}",
+            detail=f'Failed to fetch playlist tracks: {str(e)}',
         )
 
 
-@router.post("/playlists/{playlist_id}/import")
+@router.post('/playlists/{playlist_id}/import')
 async def import_playlist(
     playlist_id: str,
     spotify_service: SpotifyService = Depends(get_spotify_service),
@@ -181,13 +173,13 @@ async def import_playlist(
         db.commit()
 
         return {
-            "message": "Playlist imported successfully",
-            "playlist": playlist,
-            "tracks": tracks,
-            "tracks_count": len(tracks),
+            'message': 'Playlist imported successfully',
+            'playlist': playlist,
+            'tracks': tracks,
+            'tracks_count': len(tracks),
         }
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to import playlist: {str(e)}",
+            detail=f'Failed to import playlist: {str(e)}',
         )

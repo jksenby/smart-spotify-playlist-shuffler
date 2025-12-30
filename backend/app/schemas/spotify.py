@@ -41,7 +41,7 @@ class TrackResponse(BaseModel):
 
 class ShuffleRequest(BaseModel):
     playlist_id: str
-    shuffle_algorithm: Optional[str] = "basic_shuffle"
+    shuffle_algorithm: Optional[str] = 'basic_shuffle'
 
     class Config:
         from_attributes = True

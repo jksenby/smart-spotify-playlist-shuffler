@@ -1,4 +1,3 @@
-
 # Super Shuffler: Intelligent Playlist Randomizer
 
 Super Shuffler is a full-stack application built to provide a powerful, customized, and persistent way to shuffle and manage music playlists. Unlike standard streaming platform shuffles that often repeat tracks or artists too closely, this application implements a custom Fisher-Yates shuffle algorithm on the backend to guarantee truly random order.
@@ -85,6 +84,26 @@ Once all services are running:
 2. **Add Tracks:** Use the form to add songs (Artist and Song Title). These are stored in the database.
 3. **Shuffle:** Click the **SHUFFLE** button. The FastAPI backend executes the randomizing algorithm and updates the position of all tracks in the database.
 4. **View Results:** The frontend automatically refreshes, displaying the new, shuffled order.
+
+## Development hooks (pre-commit)
+
+This repository uses [pre-commit](https://pre-commit.com/) to run code quality checks before each commit (Python: Ruff; Frontend: Prettier + `ng lint`, plus a few generic checks like trailing whitespace). [web:10]
+
+### Install
+
+1. Install the tool: `pip install pre-commit`
+2. Install the git hook: `pre-commit install`
+
+### Run manually
+
+Run all hooks against all files (useful the first time after setup):
+
+```
+pre-commit run --all-files
+```
+
+On regular `git commit`, pre-commit runs automatically for the files included in the commit (it does **not** run `--all-files` every time). [web:10]
+
 
 ## Security Note
 

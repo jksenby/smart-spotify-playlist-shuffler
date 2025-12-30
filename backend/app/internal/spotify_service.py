@@ -5,24 +5,22 @@ from typing import Dict, Any, List
 class SpotifyService:
     """Service for interacting with Spotify Web API"""
 
-    BASE_URL = "https://api.spotify.com/v1"
+    BASE_URL = 'https://api.spotify.com/v1'
 
     def __init__(self, access_token: str):
         self.access_token = access_token
         self.headers = {
-            "Authorization": f"Bearer {self.access_token}",
-            "Content-Type": "application/json",
+            'Authorization': f'Bearer {self.access_token}',
+            'Content-Type': 'application/json',
         }
 
-    async def get_user_playlists(
-        self, limit: int = 50, offset: int = 0
-    ) -> Dict[str, Any]:
+    async def get_user_playlists(self, limit: int = 50, offset: int = 0) -> Dict[str, Any]:
         """Get current user's playlists"""
         async with httpx.AsyncClient() as client:
             response = await client.get(
-                f"{self.BASE_URL}/me/playlists",
+                f'{self.BASE_URL}/me/playlists',
                 headers=self.headers,
-                params={"limit": limit, "offset": offset},
+                params={'limit': limit, 'offset': offset},
             )
 
             response.raise_for_status()
@@ -36,10 +34,10 @@ class SpotifyService:
 
         while True:
             data = await self.get_user_playlists(limit=limit, offset=offset)
-            playlists = data.get("items", [])
+            playlists = data.get('items', [])
             all_playlists.extend(playlists)
 
-            if data.get("next") is None:
+            if data.get('next') is None:
                 break
             offset += limit
 
@@ -49,7 +47,7 @@ class SpotifyService:
         """Get a specific playlist by ID"""
         async with httpx.AsyncClient() as client:
             response = await client.get(
-                f"{self.BASE_URL}/playlists/{playlist_id}",
+                f'{self.BASE_URL}/playlists/{playlist_id}',
                 headers=self.headers,
             )
 
@@ -62,9 +60,9 @@ class SpotifyService:
         """Get tracks from a specific playlist"""
         async with httpx.AsyncClient() as client:
             response = await client.get(
-                f"{self.BASE_URL}/playlists/{playlist_id}/tracks",
+                f'{self.BASE_URL}/playlists/{playlist_id}/tracks',
                 headers=self.headers,
-                params={"limit": limit, "offset": offset},
+                params={'limit': limit, 'offset': offset},
             )
             response.raise_for_status()
             return response.json()
@@ -79,10 +77,10 @@ class SpotifyService:
             data = await self.get_playlist_tracks(
                 playlist_id=playlist_id, limit=limit, offset=offset
             )
-            tracks = data.get("items", [])
+            tracks = data.get('items', [])
             all_tracks.extend(tracks)
 
-            if data.get("next") is None:
+            if data.get('next') is None:
                 break
             offset += limit
 
@@ -94,14 +92,14 @@ class SpotifyService:
 
         for i in range(0, len(track_ids), 100):
             batch = track_ids[i : i + 100]
-            ids_param = ",".join(batch)
+            ids_param = ','.join(batch)
 
             response = await self.client.get(
-                "https://api.spotify.com/v1/audio-features", params={"ids": ids_param}
+                'https://api.spotify.com/v1/audio-features', params={'ids': ids_param}
             )
             response.raise_for_status()
             data = response.json()
-            all_features.extend(data.get("audio_features", []))
+            all_features.extend(data.get('audio_features', []))
 
         return all_features
 
@@ -109,22 +107,20 @@ class SpotifyService:
         """Create a new playlist and add tracks to it"""
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                f"{self.BASE_URL}/users/{user_id}/playlists",
+                f'{self.BASE_URL}/users/{user_id}/playlists',
                 headers=self.headers,
-                json={"name": playlist_name, "description": "Playlist created by SSPS"},
+                json={'name': playlist_name, 'description': 'Playlist created by SSPS'},
             )
             response.raise_for_status()
             return response.json()
 
-    async def add_tracks_to_playlist(
-        self, playlist_id: str, track_urls: List[str]
-    ) -> None:
+    async def add_tracks_to_playlist(self, playlist_id: str, track_urls: List[str]) -> None:
         """Add tracks to a playlist"""
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                f"{self.BASE_URL}/playlists/{playlist_id}/tracks",
+                f'{self.BASE_URL}/playlists/{playlist_id}/tracks',
                 headers=self.headers,
-                json={"uris": track_urls},
+                json={'uris': track_urls},
             )
             response.raise_for_status()
             return response.json()

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Artist, Playlist } from '@app/_shared/models/spotify.model';
-import { SpotifyService } from '@app/_shared/services/sporify-service';
+import { SpotifyService } from '@app/_shared/services/spotify-service';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, of, switchMap, tap } from 'rxjs';
