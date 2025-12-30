@@ -1,4 +1,5 @@
 export interface Track {
+  album: Album;
   album_type: string;
   artists: Array<Artist>;
   available_markets: Array<Market>;
