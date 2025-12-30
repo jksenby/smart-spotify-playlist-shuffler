@@ -6,6 +6,7 @@ from app.db.session import Base
 if TYPE_CHECKING:
     from app.models.track import Track
 
+
 class User(Base):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
@@ -22,7 +23,7 @@ class User(Base):
     spotify_access_token: Mapped[str | None] = mapped_column(String, nullable=True)
     spotify_refresh_token: Mapped[str | None] = mapped_column(String, nullable=True)
     spotify_token_expires_at: Mapped[int | None] = mapped_column(nullable=True)
-    
+
     is_active: Mapped[bool] = mapped_column(default=True)
 
     tracks: Mapped[List["Track"]] = relationship("Track", back_populates="owner")

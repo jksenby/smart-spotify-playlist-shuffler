@@ -6,6 +6,7 @@ from app.db.session import Base
 if TYPE_CHECKING:
     from app.models.user import User
 
+
 class Track(Base):
     __tablename__ = "tracks"
 

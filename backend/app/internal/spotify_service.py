@@ -1,6 +1,7 @@
 import httpx
 from typing import Dict, Any, List
 
+
 class SpotifyService:
     """Service for interacting with Spotify Web API"""
 
@@ -13,7 +14,9 @@ class SpotifyService:
             "Content-Type": "application/json",
         }
 
-    async def get_user_playlists(self, limit: int = 50, offset: int = 0) -> Dict[str, Any]:
+    async def get_user_playlists(
+        self, limit: int = 50, offset: int = 0
+    ) -> Dict[str, Any]:
         """Get current user's playlists"""
         async with httpx.AsyncClient() as client:
             response = await client.get(
@@ -21,7 +24,7 @@ class SpotifyService:
                 headers=self.headers,
                 params={"limit": limit, "offset": offset},
             )
-        
+
             response.raise_for_status()
             return response.json()
 
@@ -49,11 +52,13 @@ class SpotifyService:
                 f"{self.BASE_URL}/playlists/{playlist_id}",
                 headers=self.headers,
             )
-        
+
             response.raise_for_status()
             return response.json()
-    
-    async def get_playlist_tracks(self, playlist_id: str, limit: int = 100, offset: int = 0) -> Dict[str, Any]:
+
+    async def get_playlist_tracks(
+        self, playlist_id: str, limit: int = 100, offset: int = 0
+    ) -> Dict[str, Any]:
         """Get tracks from a specific playlist"""
         async with httpx.AsyncClient() as client:
             response = await client.get(
@@ -63,7 +68,7 @@ class SpotifyService:
             )
             response.raise_for_status()
             return response.json()
-    
+
     async def get_all_playlist_tracks(self, playlist_id: str) -> List[Dict[str, Any]]:
         """Get all tracks from a specific playlist"""
         all_tracks = []
@@ -72,37 +77,33 @@ class SpotifyService:
 
         while True:
             data = await self.get_playlist_tracks(
-                playlist_id=playlist_id, 
-                limit=limit, 
-                offset=offset
+                playlist_id=playlist_id, limit=limit, offset=offset
             )
             tracks = data.get("items", [])
             all_tracks.extend(tracks)
-            
+
             if data.get("next") is None:
                 break
             offset += limit
-        
+
         return all_tracks
 
     async def get_audio_features(self, track_ids: List[str]) -> List[Dict]:
         """Get audio features for multiple tracks"""
         all_features = []
-        
+
         for i in range(0, len(track_ids), 100):
-            batch = track_ids[i:i + 100]
-            ids_param = ','.join(batch)
-            
+            batch = track_ids[i : i + 100]
+            ids_param = ",".join(batch)
+
             response = await self.client.get(
-                f"https://api.spotify.com/v1/audio-features",
-                params={"ids": ids_param}
+                "https://api.spotify.com/v1/audio-features", params={"ids": ids_param}
             )
             response.raise_for_status()
             data = response.json()
-            all_features.extend(data.get('audio_features', []))
-        
-        return all_features
+            all_features.extend(data.get("audio_features", []))
 
+        return all_features
 
     async def create_playlist(self, playlist_name: str, user_id: str) -> Dict[str, Any]:
         """Create a new playlist and add tracks to it"""
@@ -110,12 +111,14 @@ class SpotifyService:
             response = await client.post(
                 f"{self.BASE_URL}/users/{user_id}/playlists",
                 headers=self.headers,
-                json={"name": playlist_name, "description": "Playlist created by SSPS" },
+                json={"name": playlist_name, "description": "Playlist created by SSPS"},
             )
             response.raise_for_status()
             return response.json()
 
-    async def add_tracks_to_playlist(self, playlist_id: str, track_urls: List[str]) -> None:
+    async def add_tracks_to_playlist(
+        self, playlist_id: str, track_urls: List[str]
+    ) -> None:
         """Add tracks to a playlist"""
         async with httpx.AsyncClient() as client:
             response = await client.post(
