@@ -19,7 +19,7 @@ services:
       - "8000:8000"
     environment:
       - DATABASE_URL=${DATABASE_URL}
-      - POSTGRES_SERVER=db
+      - POSTGRES_SERVER=localhost
       - POSTGRES_PORT=5432
       - FRONTEND_URL=${FRONTEND_URL}
       - SPOTIFY_REDIRECT_URI=${SPOTIFY_REDIRECT_URI}

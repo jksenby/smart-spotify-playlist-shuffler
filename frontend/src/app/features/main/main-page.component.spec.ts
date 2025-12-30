@@ -11,8 +11,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { MainPageComponent } from './main-page.component';
-import { AuthActions } from '@app/store/auth/auth.actions';
-import { PlaylistActions } from '@app/store/playlist/playlist.actions';
+import { Login, Logout, GetCurrentUser } from '@app/store/auth/auth.actions';
+import { ClearPlaylist } from '@app/store/playlist/playlist.actions';
 import { Playlist, User, TrackItem, Artist } from '@app/_shared/models/spotify.model';
 import { PlaylistDialog } from '../dialogs/playlist-dialog/playlist-dialog';
 
@@ -149,7 +149,7 @@ describe('MainPageComponent', () => {
     it('should dispatch GetCurrentUser action on init', () => {
       component.ngOnInit();
 
-      expect(store.dispatch).toHaveBeenCalledWith(jasmine.any(AuthActions.GetCurrentUser));
+      expect(store.dispatch).toHaveBeenCalledWith(jasmine.any(GetCurrentUser));
     });
 
     it('should hide spinner when not loading', fakeAsync(() => {
@@ -172,14 +172,14 @@ describe('MainPageComponent', () => {
     it('should dispatch Login action', () => {
       component.onLogin();
 
-      expect(store.dispatch).toHaveBeenCalledWith(jasmine.any(AuthActions.Login));
+      expect(store.dispatch).toHaveBeenCalledWith(jasmine.any(Login));
     });
 
     it('should dispatch Logout and ClearPlaylist actions', () => {
       component.onLogout();
 
-      expect(store.dispatch).toHaveBeenCalledWith(jasmine.any(AuthActions.Logout));
-      expect(store.dispatch).toHaveBeenCalledWith(jasmine.any(PlaylistActions.ClearPlaylist));
+      expect(store.dispatch).toHaveBeenCalledWith(jasmine.any(Logout));
+      expect(store.dispatch).toHaveBeenCalledWith(jasmine.any(ClearPlaylist));
     });
   });
 

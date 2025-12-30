@@ -32,7 +32,7 @@ jobs:
 
     - name: Run linter (if configured)
       working-directory: ./frontend
-      run: npm run lint --if-present || echo "Linting not configured, skipping..."
+      run: npm run lint
       continue-on-error: true
 
     - name: Check formatting with Prettier
@@ -40,6 +40,10 @@ jobs:
       run: |
         npx prettier --check "src/**/*.{ts,html,css,scss}" || echo "Prettier check found formatting issues"
       continue-on-error: true
+
+    - name: Run unit tests
+      working-directory: ./frontend
+      run: npm run test -- --watch=false --browsers=ChromeHeadless
 
     - name: Build application
       working-directory: ./frontend
