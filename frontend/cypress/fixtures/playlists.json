@@ -1,0 +1,83 @@
+{
+  "items": [
+    {
+      "id": "playlist1",
+      "name": "Chill Vibes",
+      "description": "Relaxing music for work",
+      "public": true,
+      "collaborative": false,
+      "tracks": {
+        "total": 50,
+        "href": "https://api.spotify.com/v1/playlists/playlist1/tracks"
+      },
+      "images": [
+        {
+          "url": "https://via.placeholder.com/300",
+          "height": 300,
+          "width": 300
+        }
+      ],
+      "owner": {
+        "display_name": "Test User",
+        "id": "test_user_123",
+        "uri": "spotify:user:test_user_123"
+      },
+      "uri": "spotify:playlist:playlist1",
+      "href": "https://api.spotify.com/v1/playlists/playlist1"
+    },
+    {
+      "id": "playlist2",
+      "name": "Workout Mix",
+      "description": "High energy workout music",
+      "public": true,
+      "collaborative": false,
+      "tracks": {
+        "total": 30,
+        "href": "https://api.spotify.com/v1/playlists/playlist2/tracks"
+      },
+      "images": [
+        {
+          "url": "https://via.placeholder.com/300",
+          "height": 300,
+          "width": 300
+        }
+      ],
+      "owner": {
+        "display_name": "Test User",
+        "id": "test_user_123",
+        "uri": "spotify:user:test_user_123"
+      },
+      "uri": "spotify:playlist:playlist2",
+      "href": "https://api.spotify.com/v1/playlists/playlist2"
+    },
+    {
+      "id": "playlist3",
+      "name": "Focus Music",
+      "description": "Music for deep focus and concentration",
+      "public": true,
+      "collaborative": false,
+      "tracks": {
+        "total": 40,
+        "href": "https://api.spotify.com/v1/playlists/playlist3/tracks"
+      },
+      "images": [
+        {
+          "url": "https://via.placeholder.com/300",
+          "height": 300,
+          "width": 300
+        }
+      ],
+      "owner": {
+        "display_name": "Test User",
+        "id": "test_user_123",
+        "uri": "spotify:user:test_user_123"
+      },
+      "uri": "spotify:playlist:playlist3",
+      "href": "https://api.spotify.com/v1/playlists/playlist3"
+    }
+  ],
+  "total": 3,
+  "limit": 50,
+  "offset": 0,
+  "href": "https://api.spotify.com/v1/me/playlists?offset=0&limit=50"
+}

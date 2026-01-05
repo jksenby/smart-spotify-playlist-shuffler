@@ -2,37 +2,44 @@
   <div class="avatar mx-auto max-w-max mb-4">
     @if (isAuthenticated$ | async) {
       <button
+        data-cy="user-menu-button"
         [matMenuTriggerFor]="userMenu"
         matFab
         extended
         class="bg-(--mat-sys-surface-container-high)! text-white! hover:bg-(--mat-sys-primary)! transition-colors flex items-center gap-2"
       >
         @if ((user$ | async)?.images; as images) {
-          <img [src]="images[0].url" alt="User avatar" class="w-8 h-8 rounded-full object-cover" />
+          <img
+            data-cy="user-avatar"
+            [src]="images[0].url"
+            alt="User avatar"
+            class="w-8 h-8 rounded-full object-cover"
+          />
         } @else {
           <mat-icon>account_circle</mat-icon>
         }
-        <span class="truncate max-w-32">
+        <span class="truncate max-w-32" data-cy="user-display-name">
           {{ (user$ | async)?.display_name || 'User' }}
         </span>
       </button>
 
       <mat-menu #userMenu="matMenu">
         <div class="px-4 py-2 border-b border-(--mat-sys-outline)">
-          <p class="font-medium text-(--mat-sys-on-surface)">
+          <p class="font-medium text-(--mat-sys-on-surface)" data-cy="user-name">
             {{ (user$ | async)?.display_name }}
           </p>
-          <p class="text-sm text-(--mat-sys-on-surface-variant)">
+          <p class="text-sm text-(--mat-sys-on-surface-variant)" data-cy="user-email">
             {{ (user$ | async)?.email }}
           </p>
         </div>
-        <button mat-menu-item (click)="onLogout()">
+        <button mat-menu-item (click)="onLogout()" data-cy="logout-button">
           <mat-icon>logout</mat-icon>
           <span>Logout</span>
         </button>
       </mat-menu>
     } @else {
       <button
+        data-cy="login-button"
         matFab
         extended
         class="bg-(--mat-sys-surface-container-high)! text-white! hover:bg-(--mat-sys-primary)! transition-colors"
@@ -44,6 +51,7 @@
     }
   </div>
   <div
+    data-cy="playlist-container"
     class="max-w-3xl mx-auto bg-(--mat-sys-surface) rounded-xl shadow-2xl overflow-hidden border border-(--mat-sys-outline)"
   >
     <div
@@ -53,13 +61,17 @@
         <h2 class="text-xs font-bold uppercase tracking-widest text-(--mat-sys-primary) mb-1">
           Playlist
         </h2>
-        <h1 class="text-3xl font-bold text-(--mat-sys-on-surface) flex items-center gap-3">
+        <h1
+          class="text-3xl font-bold text-(--mat-sys-on-surface) flex items-center gap-3"
+          data-cy="page-title"
+        >
           <mat-icon class="scale-125">library_music</mat-icon>
           Super Shuffler
         </h1>
       </div>
       <div class="flex gap-2 items-center">
         <button
+          data-cy="shuffle-button"
           mat-flat-button
           [matMenuTriggerFor]="shuffleMenu"
           color="primary"
@@ -67,7 +79,7 @@
           [disabled]="(shuffling$ | async) || (hasPlaylist$ | async) === false"
         >
           @if (shuffling$ | async) {
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2" data-cy="shuffle-progress">
               <mat-icon class="animate-spin">refresh</mat-icon>
               <span>Mixing...</span>
             </div>
@@ -80,29 +92,30 @@
         </button>
 
         <mat-menu #shuffleMenu="matMenu">
-          <button mat-menu-item (click)="onShuffle('basic_shuffle')">
+          <button mat-menu-item (click)="onShuffle('basic_shuffle')" data-cy="shuffle-basic">
             <mat-icon>shuffle</mat-icon>
             <span>Basic Shuffle</span>
           </button>
-          <button mat-menu-item (click)="onShuffle('balanced_artist')">
+          <button mat-menu-item (click)="onShuffle('balanced_artist')" data-cy="shuffle-balanced">
             <mat-icon>people</mat-icon>
             <span>Balanced Artist</span>
           </button>
-          <button mat-menu-item (click)="onShuffle('smart_spacing')">
+          <button mat-menu-item (click)="onShuffle('smart_spacing')" data-cy="shuffle-smart">
             <mat-icon>space_bar</mat-icon>
             <span>Smart Spacing</span>
           </button>
-          <button mat-menu-item (click)="onShuffle('weighted')">
+          <button mat-menu-item (click)="onShuffle('weighted')" data-cy="shuffle-weighted">
             <mat-icon>trending_up</mat-icon>
             <span>Weighted Random</span>
           </button>
-          <button mat-menu-item (click)="onShuffle('mood_based')">
+          <button mat-menu-item (click)="onShuffle('mood_based')" data-cy="shuffle-mood">
             <mat-icon>mood</mat-icon>
             <span>Mood-Based Flow</span>
           </button>
         </mat-menu>
 
         <button
+          data-cy="upload-playlist-button"
           mat-stroked-button
           color="primary"
           class="rounded-full! font-bold!"
@@ -115,10 +128,11 @@
       </div>
     </div>
     @if (currentPlaylist$ | async; as playlist) {
-      <div class="p-6 flex items-center justify-between">
+      <div class="p-6 flex items-center justify-between" data-cy="playlist-info">
         <div class="flex items-center gap-3">
           @if (playlist.images.length) {
             <img
+              data-cy="playlist-image"
               [src]="playlist.images[0].url"
               [alt]="playlist.name"
               class="w-16 h-16 rounded-md shadow-lg"
@@ -126,16 +140,17 @@
           }
           <div>
             <div class="text-sm text-(--mat-sys-on-surface-variant)">Imported Playlist</div>
-            <div class="text-lg font-bold text-(--mat-sys-on-surface)">
+            <div class="text-lg font-bold text-(--mat-sys-on-surface)" data-cy="playlist-name">
               {{ playlist.name }}
             </div>
-            <div class="text-xs text-(--mat-sys-on-surface-variant)">
+            <div class="text-xs text-(--mat-sys-on-surface-variant)" data-cy="playlist-track-count">
               {{ (currentTracks$ | async)?.length || 0 }} tracks
             </div>
           </div>
         </div>
 
         <button
+          data-cy="save-to-spotify-button"
           mat-flat-button
           color="accent"
           class="rounded-full! font-bold!"
@@ -143,7 +158,7 @@
           [disabled]="(saving$ | async) || (hasPlaylist$ | async) === false"
         >
           @if (saving$ | async) {
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2" data-cy="save-progress">
               <mat-icon class="animate-spin">refresh</mat-icon>
               <span>Saving...</span>
             </div>
@@ -157,9 +172,9 @@
       </div>
     }
 
-    <div class="pb-6">
+    <div class="pb-6" data-cy="tracks-container">
       @if ((currentTracks$ | async)?.length === 0) {
-        <div class="py-16 text-center">
+        <div class="py-16 text-center" data-cy="empty-playlist-message">
           <mat-icon class="text-6xl text-(--mat-sys-outline) w-16! h-16! mb-4"
             >queue_music</mat-icon
           >
@@ -171,9 +186,15 @@
 
       @for (item of currentTracks$ | async; track item.track.id; let i = $index) {
         <div
+          data-cy="track-item"
+          [attr.data-cy-track-id]="item.track.id"
+          [attr.data-cy-track-index]="i"
           class="group flex items-center px-4 py-2 mx-2 rounded-md hover:bg-white/5 transition-colors cursor-default"
         >
-          <div class="w-8 text-center text-(--mat-sys-on-surface-variant) font-mono text-sm">
+          <div
+            class="w-8 text-center text-(--mat-sys-on-surface-variant) font-mono text-sm"
+            data-cy="track-number"
+          >
             <span class="group-hover:hidden">{{ i + 1 }}</span>
             <mat-icon
               class="hidden! group-hover:inline-flex! text-(--mat-sys-on-surface)! text-base! align-middle"
@@ -182,11 +203,12 @@
           </div>
 
           <div class="flex-1 px-4 overflow-hidden">
-            <div class="font-medium text-(--mat-sys-on-surface) truncate">
+            <div class="font-medium text-(--mat-sys-on-surface) truncate" data-cy="track-name">
               {{ item.track.name }}
             </div>
             <div
               class="text-sm text-(--mat-sys-on-surface-variant) truncate group-hover:text-white transition-colors"
+              data-cy="track-artists"
             >
               {{ getArtistNames(item.track.artists) }}
             </div>
@@ -195,18 +217,23 @@
           <div class="flex-1 text-center">
             <div
               class="text-sm text-(--mat-sys-on-surface-variant) truncate group-hover:text-white transition-colors"
+              data-cy="track-album"
             >
               {{ item.track.album.name }}
             </div>
           </div>
 
-          <div class="hidden sm:block w-24 text-right font-mono text-xs text-(--mat-sys-outline)">
+          <div
+            class="hidden sm:block w-24 text-right font-mono text-xs text-(--mat-sys-outline)"
+            data-cy="track-duration"
+          >
             {{ formatDuration(item.track.duration_ms) }}
           </div>
 
           <button
             mat-icon-button
             class="opacity-0 group-hover:opacity-100 text-(--mat-sys-on-surface-variant)"
+            data-cy="track-menu-button"
           >
             <mat-icon>more_horiz</mat-icon>
           </button>

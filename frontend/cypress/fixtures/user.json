@@ -1,0 +1,28 @@
+{
+  "id": "test_user_123",
+  "display_name": "Test User",
+  "email": "test@example.com",
+  "country": "US",
+  "product": "premium",
+  "explicit_content": {
+    "filter_enabled": false,
+    "filter_locked": false
+  },
+  "external_urls": {
+    "spotify": "https://open.spotify.com/user/test_user_123"
+  },
+  "followers": {
+    "total": 100,
+    "href": null
+  },
+  "href": "https://api.spotify.com/v1/users/test_user_123",
+  "images": [
+    {
+      "url": "https://via.placeholder.com/150",
+      "height": 150,
+      "width": 150
+    }
+  ],
+  "type": "user",
+  "uri": "spotify:user:test_user_123"
+}
