@@ -24,6 +24,7 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { Artist, Playlist, TrackItem, User } from '@app/_shared/models/spotify.model';
 import { PlaylistDialog } from '@app/features/dialogs/playlist-dialog/playlist-dialog';
 import { PlaylistState } from '@app/store/playlist/playlist.state';
+import { SanitizerService } from '@app/_shared/security/sanitizer.service';
 
 @Component({
   selector: 'app-main-page',
@@ -46,6 +47,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   private spinner = inject(NgxSpinnerService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  private sanitizer = inject(SanitizerService);
 
   public user$: Observable<User | null> = this.store.select(AuthState.getUser);
   public isAuthenticated$: Observable<boolean> = this.store.select(AuthState.isAuthenticated);
@@ -139,6 +141,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    const csrfToken = this.sanitizer.generateCsrfToken();
+    sessionStorage.setItem('csrf_token', csrfToken);
     this.store.dispatch(new GetCurrentUser());
 
     this.loading$.pipe(takeUntil(this._destroyed$)).subscribe((isLoading) => {
@@ -165,7 +169,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   public getArtistNames(artists: Artist[]) {
-    return artists.map((artist) => artist.name).join(', ');
+    return artists.map((artist) => this.sanitizer.sanitizeText(artist.name)).join(', ');
   }
 
   ngOnDestroy(): void {

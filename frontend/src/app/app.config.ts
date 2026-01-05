@@ -20,6 +20,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { authInterceptor } from './_shared/interceptors/auth-interceptor';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { errorInterceptor } from './_shared/interceptors/error-interceptor';
+import { csrfInterceptor } from './_shared/security/csrf.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -29,7 +30,7 @@ export const appConfig: ApplicationConfig = {
     provideStore([AuthState, PlaylistState]),
     provideAnimations(),
     importProvidersFrom(NgxSpinnerModule.forRoot()),
-    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor, csrfInterceptor])),
     withNgxsFormPlugin(),
     withNgxsLoggerPlugin(),
     withNgxsReduxDevtoolsPlugin(),
