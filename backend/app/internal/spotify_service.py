@@ -124,3 +124,13 @@ class SpotifyService:
             )
             response.raise_for_status()
             return response.json()
+
+    async def get_artists(self, artist_ids: list[str]) -> list[dict]:
+        url = 'https://api.spotify.com/v1/artists'
+        params = {'ids': ','.join(artist_ids)}
+
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url, headers=self._get_headers(), params=params)
+            response.raise_for_status()
+            data = response.json()
+            return data.get('artists', [])

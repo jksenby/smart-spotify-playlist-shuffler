@@ -10,8 +10,16 @@ from app.db.session import get_db
 from app.internal.shuffle_algorithms import (
     balanced_artist_shuffle,
     basic_shuffle,
+    chronological_shuffle,
+    genre_based_shuffle,
     mood_based_shuffle,
+    reverse_by_album,
+    reverse_by_artist,
+    reverse_chunks,
+    reverse_pairs,
+    reverse_playlist,
     smart_spacing_shuffle,
+    tempo_based_shuffle,
     weighted_shuffle,
 )
 from app.schemas.spotify import CreatePlaylisRequest, ShuffleRequest
@@ -94,6 +102,7 @@ async def shuffle_playlist(
     """Shuffle the tracks in a playlist"""
     try:
         tracks = await spotify_service.get_all_playlist_tracks(request.playlist_id)
+
         if request.shuffle_algorithm == 'basic_shuffle':
             basic_shuffle(tracks)
         elif request.shuffle_algorithm == 'balanced_artist':
@@ -104,7 +113,34 @@ async def shuffle_playlist(
             smart_spacing_shuffle(tracks, min_gap=3)
         elif request.shuffle_algorithm == 'weighted':
             weighted_shuffle(tracks)
-
+        elif request.shuffle_algorithm == 'genre_based':
+            await genre_based_shuffle(tracks, spotify_service)
+        elif request.shuffle_algorithm == 'tempo_ascending':
+            await tempo_based_shuffle(tracks, spotify_service, direction='ascending')
+        elif request.shuffle_algorithm == 'tempo_descending':
+            await tempo_based_shuffle(tracks, spotify_service, direction='descending')
+        elif request.shuffle_algorithm == 'tempo_wave':
+            await tempo_based_shuffle(tracks, spotify_service, direction='wave')
+        elif request.shuffle_algorithm == 'tempo_blocks':
+            await tempo_based_shuffle(tracks, spotify_service, direction='random_blocks')
+        elif request.shuffle_algorithm == 'chronological_newest':
+            chronological_shuffle(tracks, direction='newest_first')
+        elif request.shuffle_algorithm == 'chronological_oldest':
+            chronological_shuffle(tracks, direction='oldest_first')
+        elif request.shuffle_algorithm == 'chronological_decades':
+            chronological_shuffle(tracks, direction='decades')
+        elif request.shuffle_algorithm == 'chronological_mixed':
+            chronological_shuffle(tracks, direction='mixed_eras')
+        elif request.shuffle_algorithm == 'reverse_playlist':
+            reverse_playlist(tracks)
+        elif request.shuffle_algorithm == 'reverse_by_artist':
+            reverse_by_artist(tracks)
+        elif request.shuffle_algorithm == 'reverse_by_album':
+            reverse_by_album(tracks)
+        elif request.shuffle_algorithm == 'reverse_pairs':
+            reverse_pairs(tracks)
+        elif request.shuffle_algorithm == 'reverse_chunks':
+            reverse_chunks(tracks, chunk_size=5)
         return tracks
     except Exception as e:
         raise HTTPException(status_code=500, detail=f'Failed to shuffle playlist: {str(e)}')

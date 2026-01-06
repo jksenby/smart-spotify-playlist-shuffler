@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
@@ -38,6 +39,7 @@ import { SanitizerService } from '@app/_shared/security/sanitizer.service';
     FormsModule,
     CommonModule,
     RouterModule,
+    MatDividerModule,
   ],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss',

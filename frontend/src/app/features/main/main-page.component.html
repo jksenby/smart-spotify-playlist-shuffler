@@ -92,25 +92,197 @@
         </button>
 
         <mat-menu #shuffleMenu="matMenu">
+          <div
+            class="px-4 py-2 text-xs font-bold uppercase tracking-widest text-(--mat-sys-primary)"
+          >
+            Basic Algorithms
+          </div>
+
           <button mat-menu-item (click)="onShuffle('basic_shuffle')" data-cy="shuffle-basic">
             <mat-icon>shuffle</mat-icon>
             <span>Basic Shuffle</span>
           </button>
+
           <button mat-menu-item (click)="onShuffle('balanced_artist')" data-cy="shuffle-balanced">
             <mat-icon>people</mat-icon>
             <span>Balanced Artist</span>
           </button>
+
           <button mat-menu-item (click)="onShuffle('smart_spacing')" data-cy="shuffle-smart">
             <mat-icon>space_bar</mat-icon>
             <span>Smart Spacing</span>
           </button>
+
           <button mat-menu-item (click)="onShuffle('weighted')" data-cy="shuffle-weighted">
             <mat-icon>trending_up</mat-icon>
             <span>Weighted Random</span>
           </button>
+
           <button mat-menu-item (click)="onShuffle('mood_based')" data-cy="shuffle-mood">
             <mat-icon>mood</mat-icon>
             <span>Mood-Based Flow</span>
+          </button>
+
+          <mat-divider></mat-divider>
+
+          <div
+            class="px-4 py-2 text-xs font-bold uppercase tracking-widest text-(--mat-sys-primary)"
+          >
+            Reverse Algorithms
+          </div>
+
+          <button mat-menu-item (click)="onShuffle('reverse_playlist')" data-cy="shuffle-reverse">
+            <mat-icon>flip</mat-icon>
+            <span>Reverse All</span>
+          </button>
+
+          <button mat-menu-item [matMenuTriggerFor]="reverseMenu" data-cy="shuffle-reverse-menu">
+            <mat-icon>swap_vert</mat-icon>
+            <span>Reverse Options</span>
+            <mat-icon class="ml-auto">chevron_right</mat-icon>
+          </button>
+
+          <mat-menu #reverseMenu="matMenu">
+            <div class="px-4 py-2 text-xs font-semibold text-(--mat-sys-on-surface-variant)">
+              Reverse Methods
+            </div>
+
+            <button
+              mat-menu-item
+              (click)="onShuffle('reverse_by_artist')"
+              data-cy="shuffle-reverse-artist"
+            >
+              <mat-icon>person</mat-icon>
+              <span>By Artist</span>
+            </button>
+
+            <button
+              mat-menu-item
+              (click)="onShuffle('reverse_by_album')"
+              data-cy="shuffle-reverse-album"
+            >
+              <mat-icon>album</mat-icon>
+              <span>By Album</span>
+            </button>
+
+            <button
+              mat-menu-item
+              (click)="onShuffle('reverse_pairs')"
+              data-cy="shuffle-reverse-pairs"
+            >
+              <mat-icon>compare_arrows</mat-icon>
+              <span>Swap Pairs</span>
+            </button>
+
+            <button
+              mat-menu-item
+              (click)="onShuffle('reverse_chunks')"
+              data-cy="shuffle-reverse-chunks"
+            >
+              <mat-icon>view_column</mat-icon>
+              <span>By Chunks</span>
+            </button>
+          </mat-menu>
+
+          <mat-divider></mat-divider>
+
+          <div
+            class="px-4 py-2 text-xs font-bold uppercase tracking-widest text-(--mat-sys-primary)"
+          >
+            Advanced Algorithms
+          </div>
+
+          <button mat-menu-item (click)="onShuffle('genre_based')" data-cy="shuffle-genre">
+            <mat-icon>music_note</mat-icon>
+            <span>Genre Flow</span>
+          </button>
+
+          <button mat-menu-item [matMenuTriggerFor]="tempoMenu" data-cy="shuffle-tempo-menu">
+            <mat-icon>speed</mat-icon>
+            <span>By Tempo</span>
+            <mat-icon class="ml-auto">chevron_right</mat-icon>
+          </button>
+
+          <button
+            mat-menu-item
+            [matMenuTriggerFor]="chronologicalMenu"
+            data-cy="shuffle-chrono-menu"
+          >
+            <mat-icon>event</mat-icon>
+            <span>By Date</span>
+            <mat-icon class="ml-auto">chevron_right</mat-icon>
+          </button>
+        </mat-menu>
+
+        <mat-menu #tempoMenu="matMenu">
+          <div class="px-4 py-2 text-xs font-semibold text-(--mat-sys-on-surface-variant)">
+            Tempo-Based Shuffle
+          </div>
+
+          <button mat-menu-item (click)="onShuffle('tempo_ascending')" data-cy="shuffle-tempo-asc">
+            <mat-icon>trending_up</mat-icon>
+            <span>Energy Build-up</span>
+          </button>
+
+          <button
+            mat-menu-item
+            (click)="onShuffle('tempo_descending')"
+            data-cy="shuffle-tempo-desc"
+          >
+            <mat-icon>trending_down</mat-icon>
+            <span>Energy Cool-down</span>
+          </button>
+
+          <button mat-menu-item (click)="onShuffle('tempo_wave')" data-cy="shuffle-tempo-wave">
+            <mat-icon>waves</mat-icon>
+            <span>Energy Waves</span>
+          </button>
+
+          <button mat-menu-item (click)="onShuffle('tempo_blocks')" data-cy="shuffle-tempo-blocks">
+            <mat-icon>view_module</mat-icon>
+            <span>Tempo Blocks</span>
+          </button>
+        </mat-menu>
+
+        <mat-menu #chronologicalMenu="matMenu">
+          <div class="px-4 py-2 text-xs font-semibold text-(--mat-sys-on-surface-variant)">
+            Chronological Shuffle
+          </div>
+
+          <button
+            mat-menu-item
+            (click)="onShuffle('chronological_newest')"
+            data-cy="shuffle-chrono-new"
+          >
+            <mat-icon>new_releases</mat-icon>
+            <span>Newest First</span>
+          </button>
+
+          <button
+            mat-menu-item
+            (click)="onShuffle('chronological_oldest')"
+            data-cy="shuffle-chrono-old"
+          >
+            <mat-icon>history</mat-icon>
+            <span>Classics First</span>
+          </button>
+
+          <button
+            mat-menu-item
+            (click)="onShuffle('chronological_decades')"
+            data-cy="shuffle-chrono-decades"
+          >
+            <mat-icon>calendar_view_month</mat-icon>
+            <span>By Decades</span>
+          </button>
+
+          <button
+            mat-menu-item
+            (click)="onShuffle('chronological_mixed')"
+            data-cy="shuffle-chrono-mixed"
+          >
+            <mat-icon>shuffle</mat-icon>
+            <span>Era Mix</span>
           </button>
         </mat-menu>
 
