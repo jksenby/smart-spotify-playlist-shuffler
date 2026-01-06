@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { filter, first, Observable, Subject, takeUntil } from 'rxjs';
+import { filter, first, Observable, Subject, takeUntil, merge } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -19,10 +19,11 @@ import {
   LoadCurrentPlaylist,
   ImportPlaylist,
   ClearPlaylist,
+  RemoveTrack,
 } from '@app/store/playlist/playlist.actions';
 import { AuthState } from '@app/store/auth/auth.state';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
-import { Artist, Playlist, TrackItem, User } from '@app/_shared/models/spotify.model';
+import { Artist, Playlist, Track, TrackItem, User } from '@app/_shared/models/spotify.model';
 import { PlaylistDialog } from '@app/features/dialogs/playlist-dialog/playlist-dialog';
 import { PlaylistState } from '@app/store/playlist/playlist.state';
 import { SanitizerService } from '@app/_shared/security/sanitizer.service';
@@ -147,13 +148,15 @@ export class MainPageComponent implements OnInit, OnDestroy {
     sessionStorage.setItem('csrf_token', csrfToken);
     this.store.dispatch(new GetCurrentUser());
 
-    this.loading$.pipe(takeUntil(this._destroyed$)).subscribe((isLoading) => {
-      if (isLoading) {
-        this.spinner.show();
-      } else {
-        this.spinner.hide();
-      }
-    });
+    merge(this.loading$, this.playlistLoading$)
+      .pipe(takeUntil(this._destroyed$))
+      .subscribe((isLoading) => {
+        if (isLoading) {
+          this.spinner.show();
+        } else {
+          this.spinner.hide();
+        }
+      });
 
     this.isAuthenticated$
       .pipe(takeUntil(this._destroyed$))
@@ -172,6 +175,15 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   public getArtistNames(artists: Artist[]) {
     return artists.map((artist) => this.sanitizer.sanitizeText(artist.name)).join(', ');
+  }
+
+  public onRemove(track: Track, playlist: Playlist) {
+    this.store.dispatch(new RemoveTrack(track.uri, playlist.id, playlist.snapshot_id));
+  }
+
+  public async copyTrackLinkToClipboard(track: Track) {
+    await navigator.clipboard.writeText(track.external_urls.spotify);
+    this.snackBar.open('Copied to Clipboard');
   }
 
   ngOnDestroy(): void {

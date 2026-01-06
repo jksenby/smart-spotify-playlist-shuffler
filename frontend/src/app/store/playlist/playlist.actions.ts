@@ -30,5 +30,9 @@ export class AddTrack {
 
 export class RemoveTrack {
   static readonly type = '[Playlist] Remove Track';
-  constructor(public trackId: string) {}
+  constructor(
+    public trackUri: string,
+    public playlistId: string,
+    public snapshop_id: string,
+  ) {}
 }

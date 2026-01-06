@@ -406,9 +406,22 @@
             mat-icon-button
             class="opacity-0 group-hover:opacity-100 text-(--mat-sys-on-surface-variant)"
             data-cy="track-menu-button"
+            [matMenuTriggerFor]="trackMenu"
           >
             <mat-icon>more_horiz</mat-icon>
           </button>
+          <mat-menu #trackMenu="matMenu">
+            @if (currentPlaylist$ | async; as playlist) {
+              <button mat-menu-item (click)="onRemove(item.track, playlist)">
+                <mat-icon>delete</mat-icon>
+                <span>Remove from playlist</span>
+              </button>
+            }
+            <button mat-menu-item (click)="copyTrackLinkToClipboard(item.track)">
+              <mat-icon>content_copy</mat-icon>
+              <span>Copy Link</span>
+            </button>
+          </mat-menu>
         </div>
       }
     </div>

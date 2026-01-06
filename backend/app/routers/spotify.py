@@ -219,3 +219,24 @@ async def import_playlist(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f'Failed to import playlist: {str(e)}',
         )
+
+
+@router.delete('/playlists/{playlist_id}/tracks/{track_uri}')
+async def removeTrackFromPlaylist(
+    playlist_id: str,
+    track_uri: str,
+    snapshop_id: str,
+    spotify_service: SpotifyService = Depends(get_spotify_service),
+):
+    """Remove Track From Playlist"""
+    try:
+        await spotify_service.remove_track_from_playlist(
+            playlist_id=playlist_id, track_uri=track_uri, snapshop_id=snapshop_id
+        )
+
+        return {'message': 'Track removed from playlist'}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f'Failed to remove track: {str(e)}',
+        )

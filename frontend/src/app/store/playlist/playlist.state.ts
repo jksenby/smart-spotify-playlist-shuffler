@@ -13,6 +13,7 @@ import {
   LoadCurrentPlaylist,
   ImportPlaylist,
 } from './playlist.actions';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface PlaylistStateModel {
   currentPlaylist: Playlist | null;
@@ -37,6 +38,7 @@ export interface PlaylistStateModel {
 @Injectable()
 export class PlaylistState {
   private spotifyService = inject(SpotifyService);
+  private snackBar = inject(MatSnackBar);
 
   @Selector()
   static getCurrentPlaylist(state: PlaylistStateModel): Playlist | null {
@@ -186,8 +188,25 @@ export class PlaylistState {
   @Action(RemoveTrack)
   removeTrack(ctx: StateContext<PlaylistStateModel>, action: RemoveTrack) {
     const state = ctx.getState();
-    ctx.patchState({
-      currentTracks: state.currentTracks.filter((t) => t.track.id !== action.trackId),
-    });
+    ctx.patchState({ loading: true });
+    return this.spotifyService
+      .deleteTrackFromPlaylist(action.playlistId, action.trackUri, action.snapshop_id)
+      .pipe(
+        tap((response) => {
+          ctx.patchState({
+            currentTracks: state.currentTracks.filter((t) => t.track.uri !== action.trackUri),
+            loading: false,
+          });
+          this.snackBar.open(response.message);
+        }),
+        catchError((error) => {
+          ctx.patchState({
+            saving: false,
+            error: 'Failed to remove the track',
+            loading: false,
+          });
+          return throwError(() => error);
+        }),
+      );
   }
 }

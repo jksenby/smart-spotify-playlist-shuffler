@@ -134,3 +134,21 @@ class SpotifyService:
             response.raise_for_status()
             data = response.json()
             return data.get('artists', [])
+
+    async def remove_track_from_playlist(
+        self, playlist_id: str, track_uri: str, snapshop_id: str
+    ) -> Dict[str, Any]:
+        async with httpx.AsyncClient() as client:
+            payload = {'tracks': [{'uri': track_uri}], 'snapshop_id': snapshop_id}
+
+            print(payload)
+
+            response = await client.request(
+                url=f'{self.BASE_URL}/playlists/{playlist_id}/tracks',
+                method='DELETE',
+                headers=self.headers,
+                json=payload,
+            )
+
+            response.raise_for_status()
+            return response.json()
