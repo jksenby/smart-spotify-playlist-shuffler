@@ -21,6 +21,8 @@ import { authInterceptor } from './_shared/interceptors/auth-interceptor';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { errorInterceptor } from './_shared/interceptors/error-interceptor';
 import { csrfInterceptor } from './_shared/security/csrf.interceptor';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -29,6 +31,14 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideStore([AuthState, PlaylistState]),
     provideAnimations(),
+    provideTranslateService({
+      fallbackLang: 'en',
+      lang: 'en',
+      loader: provideTranslateHttpLoader({
+        prefix: '/assets/i18n/',
+        suffix: '.json',
+      }),
+    }),
     importProvidersFrom(NgxSpinnerModule.forRoot()),
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor, csrfInterceptor])),
     withNgxsFormPlugin(),

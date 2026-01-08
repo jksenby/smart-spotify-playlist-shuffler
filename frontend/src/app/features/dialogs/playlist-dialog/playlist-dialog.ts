@@ -9,6 +9,7 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-playlist-dialog',
@@ -19,6 +20,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatButtonModule,
     MatIconModule,
     MatExpansionModule,
+    TranslatePipe,
   ],
   templateUrl: './playlist-dialog.html',
   styleUrl: './playlist-dialog.scss',
@@ -28,6 +30,7 @@ export class PlaylistDialog implements OnInit {
   private _snackBar = inject(MatSnackBar);
   private _spotifyService = inject(SpotifyService);
   private _dialogRef = inject(MatDialogRef);
+  private _translate = inject(TranslateService);
 
   public playlists$: Observable<Playlist[]> | null = null;
   public loadingTracks = new Set<string>();
@@ -47,7 +50,10 @@ export class PlaylistDialog implements OnInit {
       catchError((error) => {
         this._spinner.hide();
         console.error('Error fetching playlists:', error);
-        this._snackBar.open('Error fetching playlists', 'Close');
+        this._snackBar.open(
+          this._translate.instant('MAIN.NOTIFICATIONS.ERROR'),
+          this._translate.instant('MAIN.NOTIFICATIONS.CLOSE'),
+        );
         return of<Playlist[]>([]);
       }),
     );

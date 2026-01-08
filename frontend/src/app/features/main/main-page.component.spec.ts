@@ -15,6 +15,8 @@ import { Login, Logout, GetCurrentUser } from '@app/store/auth/auth.actions';
 import { ClearPlaylist } from '@app/store/playlist/playlist.actions';
 import { Playlist, User, TrackItem, Artist } from '@app/_shared/models/spotify.model';
 import { PlaylistDialog } from '../dialogs/playlist-dialog/playlist-dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { MatSelectChange } from '@angular/material/select';
 
 describe('MainPageComponent', () => {
   let component: MainPageComponent;
@@ -23,6 +25,7 @@ describe('MainPageComponent', () => {
   let dialog: jasmine.SpyObj<MatDialog>;
   let snackBar: jasmine.SpyObj<MatSnackBar>;
   let spinner: jasmine.SpyObj<NgxSpinnerService>;
+  let translate: jasmine.SpyObj<TranslateService>;
 
   let userSubject: BehaviorSubject<User | null>;
   let isAuthenticatedSubject: BehaviorSubject<boolean>;
@@ -94,6 +97,7 @@ describe('MainPageComponent', () => {
     const dialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
     const snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
     const spinnerSpy = jasmine.createSpyObj('NgxSpinnerService', ['show', 'hide']);
+    const translateSpy = jasmine.createSpyObj('TranslateService', ['use', 'instant', 'get']);
 
     storeSpy.select.and.callFake((selector: { name?: string }) => {
       const selectorName = selector?.name || '';
@@ -122,6 +126,10 @@ describe('MainPageComponent', () => {
 
     storeSpy.dispatch.and.returnValue(of({}));
 
+    translateSpy.use.and.returnValue(of({}));
+    translateSpy.instant.and.callFake((key: string) => key);
+    translateSpy.get.and.callFake((key: string) => of(key));
+
     await TestBed.configureTestingModule({
       imports: [MainPageComponent],
       providers: [
@@ -129,6 +137,7 @@ describe('MainPageComponent', () => {
         { provide: MatDialog, useValue: dialogSpy },
         { provide: MatSnackBar, useValue: snackBarSpy },
         { provide: NgxSpinnerService, useValue: spinnerSpy },
+        { provide: TranslateService, useValue: translateSpy },
       ],
     }).compileComponents();
 
@@ -136,6 +145,7 @@ describe('MainPageComponent', () => {
     dialog = TestBed.inject(MatDialog) as jasmine.SpyObj<MatDialog>;
     snackBar = TestBed.inject(MatSnackBar) as jasmine.SpyObj<MatSnackBar>;
     spinner = TestBed.inject(NgxSpinnerService) as jasmine.SpyObj<NgxSpinnerService>;
+    translate = TestBed.inject(TranslateService) as jasmine.SpyObj<TranslateService>;
 
     fixture = TestBed.createComponent(MainPageComponent);
     component = fixture.componentInstance;
@@ -166,6 +176,26 @@ describe('MainPageComponent', () => {
       component.ngOnDestroy();
       discardPeriodicTasks();
     }));
+
+    it('should load language from localStorage', () => {
+      localStorage.setItem('lang', 'ru');
+
+      const newFixture = TestBed.createComponent(MainPageComponent);
+      const newComponent = newFixture.componentInstance;
+
+      expect(newComponent.selectedLanguage).toBe('ru');
+
+      localStorage.removeItem('lang');
+    });
+
+    it('should default to "en" if no language in localStorage', () => {
+      localStorage.removeItem('lang');
+
+      const newFixture = TestBed.createComponent(MainPageComponent);
+      const newComponent = newFixture.componentInstance;
+
+      expect(newComponent.selectedLanguage).toBe('en');
+    });
   });
 
   describe('Authentication', () => {
@@ -272,6 +302,25 @@ describe('MainPageComponent', () => {
 
       discardPeriodicTasks();
     }));
+  });
+
+  describe('Translation', () => {
+    it('should change language on language selection', () => {
+      const event = { value: 'ru' };
+      component.onLanguageChange(event as MatSelectChange);
+
+      expect(localStorage.getItem('lang')).toBe('ru');
+      expect(translate.use).toHaveBeenCalledWith('ru');
+
+      localStorage.removeItem('lang');
+    });
+
+    it('should get translated text', () => {
+      const result = component.getTranslate('test.key');
+
+      expect(translate.instant).toHaveBeenCalledWith('test.key');
+      expect(result).toBe('test.key');
+    });
   });
 
   describe('Utility Methods', () => {

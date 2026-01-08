@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { filter, first, Observable, Subject, takeUntil, merge } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,6 +26,8 @@ import { Artist, Playlist, Track, TrackItem, User } from '@app/_shared/models/sp
 import { PlaylistDialog } from '@app/features/dialogs/playlist-dialog/playlist-dialog';
 import { PlaylistState } from '@app/store/playlist/playlist.state';
 import { SanitizerService } from '@app/_shared/security/sanitizer.service';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-main-page',
@@ -37,10 +38,11 @@ import { SanitizerService } from '@app/_shared/security/sanitizer.service';
     MatFormFieldModule,
     MatMenuModule,
     NgxSpinnerModule,
-    FormsModule,
     CommonModule,
     RouterModule,
     MatDividerModule,
+    MatSelectModule,
+    TranslatePipe,
   ],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss',
@@ -51,6 +53,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private sanitizer = inject(SanitizerService);
+  private translate = inject(TranslateService);
 
   public user$: Observable<User | null> = this.store.select(AuthState.getUser);
   public isAuthenticated$: Observable<boolean> = this.store.select(AuthState.isAuthenticated);
@@ -66,6 +69,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
   public shuffling$: Observable<boolean> = this.store.select(PlaylistState.isShuffling);
   public saving$: Observable<boolean> = this.store.select(PlaylistState.isSaving);
   public hasPlaylist$: Observable<boolean> = this.store.select(PlaylistState.hasPlaylist);
+
+  public selectedLanguage: string = localStorage.getItem('lang') || 'en';
 
   private readonly _destroyed$ = new Subject<void>();
 
@@ -184,6 +189,15 @@ export class MainPageComponent implements OnInit, OnDestroy {
   public async copyTrackLinkToClipboard(track: Track) {
     await navigator.clipboard.writeText(track.external_urls.spotify);
     this.snackBar.open('Copied to Clipboard');
+  }
+
+  public onLanguageChange(event: MatSelectChange) {
+    localStorage.setItem('lang', event.value);
+    this.translate.use(event.value);
+  }
+
+  public getTranslate(value: string) {
+    return this.translate.instant(value);
   }
 
   ngOnDestroy(): void {

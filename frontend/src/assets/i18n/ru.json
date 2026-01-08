@@ -1,0 +1,109 @@
+{
+  "LANG": {
+    "RU": "Русский Язык",
+    "EN": "English"
+  },
+  "MAIN": {
+    "USER": {
+      "DEFAULT_NAME": "Пользователь",
+      "LOGOUT": "Выйти",
+      "LOGIN": "Войти"
+    },
+    "HEADER": {
+      "PLAYLIST": "Плейлист",
+      "TITLE": "Супер Шаффлер"
+    },
+    "BUTTONS": {
+      "SHUFFLE": "ПЕРЕМЕШАТЬ",
+      "MIXING": "Перемешивание...",
+      "UPLOAD_PLAYLIST": "Загрузить плейлист",
+      "SAVE_TO_SPOTIFY": "Сохранить в Spotify",
+      "SAVING": "Сохранение..."
+    },
+    "ALGORITHMS": {
+      "BASIC_ALGORITHMS": "Базовые алгоритмы",
+      "BASIC_SHUFFLE": "Базовое перемешивание",
+      "BALANCED_ARTIST": "Сбалансированные артисты",
+      "SMART_SPACING": "Умное распределение",
+      "WEIGHTED_RANDOM": "Взвешенная случайность",
+      "MOOD_BASED_FLOW": "По настроению",
+      "REVERSE_ALGORITHMS": "Алгоритмы реверса",
+      "REVERSE_ALL": "Развернуть всё",
+      "REVERSE_OPTIONS": "Опции реверса",
+      "REVERSE_METHODS": "Методы реверса",
+      "BY_ARTIST": "По артисту",
+      "BY_ALBUM": "По альбому",
+      "SWAP_PAIRS": "Поменять пары",
+      "BY_CHUNKS": "По блокам",
+      "ADVANCED_ALGORITHMS": "Продвинутые алгоритмы",
+      "GENRE_FLOW": "По жанрам",
+      "BY_TEMPO": "По темпу",
+      "BY_DATE": "По дате"
+    },
+    "TEMPO": {
+      "TITLE": "Перемешивание по темпу",
+      "ENERGY_BUILD_UP": "Нарастание энергии",
+      "ENERGY_COOL_DOWN": "Спад энергии",
+      "ENERGY_WAVES": "Волны энергии",
+      "TEMPO_BLOCKS": "Блоки темпа"
+    },
+    "CHRONOLOGICAL": {
+      "TITLE": "Хронологическое перемешивание",
+      "NEWEST_FIRST": "Сначала новое",
+      "CLASSICS_FIRST": "Сначала классика",
+      "BY_DECADES": "По десятилетиям",
+      "ERA_MIX": "Микс эпох"
+    },
+    "PLAYLIST": {
+      "IMPORTED_PLAYLIST": "Импортированный плейлист",
+      "TRACKS": "треков",
+      "EMPTY_MESSAGE": "Плейлист не загружен. Нажмите \"Загрузить плейлист\" чтобы начать!"
+    },
+    "TRACK_MENU": {
+      "REMOVE_FROM_PLAYLIST": "Удалить из плейлиста",
+      "COPY_LINK": "Копировать ссылку"
+    },
+    "NOTIFICATIONS": {
+      "SHUFFLED_WITH": "Плейлист перемешан алгоритмом {{algorithm}}!",
+      "SAVED": "Плейлист {{name}} сохранён в Spotify!",
+      "UPLOADED": "{{name}} загружен!",
+      "ERROR": "Что-то пошло не так",
+      "COPIED_TO_CLIPBOARD": "Скопировано в буфер обмена",
+      "CLOSE": "Закрыть"
+    },
+    "ALGORITHM_NAMES": {
+      "BASIC_SHUFFLE": "Базовое перемешивание",
+      "BALANCED_ARTIST": "Сбалансированные артисты",
+      "SMART_SPACING": "Умное распределение",
+      "WEIGHTED": "Взвешенная случайность",
+      "MOOD_BASED": "По настроению",
+      "REVERSE_PLAYLIST": "Развернуть всё",
+      "REVERSE_BY_ARTIST": "Реверс по артисту",
+      "REVERSE_BY_ALBUM": "Реверс по альбому",
+      "REVERSE_PAIRS": "Поменять пары",
+      "REVERSE_CHUNKS": "Реверс по блокам",
+      "GENRE_BASED": "По жанрам",
+      "TEMPO_ASCENDING": "Нарастание энергии",
+      "TEMPO_DESCENDING": "Спад энергии",
+      "TEMPO_WAVE": "Волны энергии",
+      "TEMPO_BLOCKS": "Блоки темпа",
+      "CHRONOLOGICAL_NEWEST": "Сначала новое",
+      "CHRONOLOGICAL_OLDEST": "Сначала классика",
+      "CHRONOLOGICAL_DECADES": "По десятилетиям",
+      "CHRONOLOGICAL_MIXED": "Микс эпох"
+    }
+  },
+  "PLAYLIST_DIALOG": {
+    "TITLE": "Выберите плейлист для импорта",
+    "IMPORT": "Импортировать",
+    "TRACK": "трек",
+    "TRACKS": "треков",
+    "COLUMNS": {
+      "INDEX": "№",
+      "TITLE": "Название",
+      "ARTIST": "Исполнитель",
+      "DURATION": "Длительность"
+    },
+    "NO_TRACKS_LOADED": "Треки для этого плейлиста ещё не загружены."
+  }
+}

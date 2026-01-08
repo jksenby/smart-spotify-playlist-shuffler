@@ -1,27 +1,31 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PlaylistDialog } from './playlist-dialog';
 import { provideHttpClient } from '@angular/common/http';
-import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { of } from 'rxjs';
 
 describe('PlaylistDialog', () => {
   let component: PlaylistDialog;
   let fixture: ComponentFixture<PlaylistDialog>;
 
   beforeEach(async () => {
+    const translateSpy = jasmine.createSpyObj('TranslateService', ['use', 'instant', 'get']);
+    translateSpy.use.and.returnValue(of({}));
+    translateSpy.get.and.returnValue(of({}));
+    translateSpy.instant.and.callFake((key: string) => key);
+
     await TestBed.configureTestingModule({
       imports: [PlaylistDialog],
       providers: [
         provideHttpClient(),
-        { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
         { provide: MatDialogRef, useValue: jasmine.createSpyObj('MatDialogRef', ['close']) },
-        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: TranslateService, useValue: translateSpy },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PlaylistDialog);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {

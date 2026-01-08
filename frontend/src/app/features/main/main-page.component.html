@@ -1,5 +1,5 @@
 <div class="min-h-screen font-sans p-4 md:p-8 bg-(--mat-sys-background)">
-  <div class="avatar mx-auto max-w-max mb-4">
+  <div class="avatar mx-auto max-w-max mb-4 flex flex-col gap-3">
     @if (isAuthenticated$ | async) {
       <button
         data-cy="user-menu-button"
@@ -11,7 +11,7 @@
         @if ((user$ | async)?.images; as images) {
           <img
             data-cy="user-avatar"
-            [src]="images[0]?.url ?? '../../../assets/user-icon.png'"
+            [src]="images[0]?.url ?? '../../../assets/images/user-icon.png'"
             alt="User avatar"
             class="w-8 h-8 rounded-full object-cover"
           />
@@ -19,7 +19,7 @@
           <mat-icon>account_circle</mat-icon>
         }
         <span class="truncate max-w-32" data-cy="user-display-name">
-          {{ (user$ | async)?.display_name || 'User' }}
+          {{ (user$ | async)?.display_name || ('MAIN.USER.DEFAULT_NAME' | translate) }}
         </span>
       </button>
 
@@ -34,7 +34,7 @@
         </div>
         <button mat-menu-item (click)="onLogout()" data-cy="logout-button">
           <mat-icon>logout</mat-icon>
-          <span>Logout</span>
+          <span>{{ 'MAIN.USER.LOGOUT' | translate }}</span>
         </button>
       </mat-menu>
     } @else {
@@ -45,10 +45,14 @@
         class="bg-(--mat-sys-surface-container-high)! text-white! hover:bg-(--mat-sys-primary)! transition-colors"
         (click)="onLogin()"
       >
-        Login
+        {{ 'MAIN.USER.LOGIN' | translate }}
         <mat-icon>login</mat-icon>
       </button>
     }
+    <mat-select [(value)]="selectedLanguage" (selectionChange)="onLanguageChange($event)">
+      <mat-option value="en">{{ getTranslate('LANG.EN') }}</mat-option>
+      <mat-option value="ru">{{ getTranslate('LANG.RU') }}</mat-option>
+    </mat-select>
   </div>
   <div
     data-cy="playlist-container"
@@ -59,14 +63,14 @@
     >
       <div>
         <h2 class="text-xs font-bold uppercase tracking-widest text-(--mat-sys-primary) mb-1">
-          Playlist
+          {{ 'MAIN.HEADER.PLAYLIST' | translate }}
         </h2>
         <h1
           class="text-3xl font-bold text-(--mat-sys-on-surface) flex items-center gap-3"
           data-cy="page-title"
         >
           <mat-icon class="scale-125">library_music</mat-icon>
-          Super Shuffler
+          {{ 'MAIN.HEADER.TITLE' | translate }}
         </h1>
       </div>
       <div class="flex gap-2 items-center">
@@ -81,11 +85,11 @@
           @if (shuffling$ | async) {
             <div class="flex items-center gap-2" data-cy="shuffle-progress">
               <mat-icon class="animate-spin">refresh</mat-icon>
-              <span>Mixing...</span>
+              <span>{{ 'MAIN.BUTTONS.MIXING' | translate }}</span>
             </div>
           } @else {
             <div class="flex items-center gap-2">
-              <span>SHUFFLE</span>
+              <span>{{ 'MAIN.BUTTONS.SHUFFLE' | translate }}</span>
               <mat-icon>arrow_drop_down</mat-icon>
             </div>
           }
@@ -95,32 +99,32 @@
           <div
             class="px-4 py-2 text-xs font-bold uppercase tracking-widest text-(--mat-sys-primary)"
           >
-            Basic Algorithms
+            {{ 'MAIN.ALGORITHMS.BASIC_ALGORITHMS' | translate }}
           </div>
 
           <button mat-menu-item (click)="onShuffle('basic_shuffle')" data-cy="shuffle-basic">
             <mat-icon>shuffle</mat-icon>
-            <span>Basic Shuffle</span>
+            <span>{{ 'MAIN.ALGORITHMS.BASIC_SHUFFLE' | translate }}</span>
           </button>
 
           <button mat-menu-item (click)="onShuffle('balanced_artist')" data-cy="shuffle-balanced">
             <mat-icon>people</mat-icon>
-            <span>Balanced Artist</span>
+            <span>{{ 'MAIN.ALGORITHMS.BALANCED_ARTIST' | translate }}</span>
           </button>
 
           <button mat-menu-item (click)="onShuffle('smart_spacing')" data-cy="shuffle-smart">
             <mat-icon>space_bar</mat-icon>
-            <span>Smart Spacing</span>
+            <span>{{ 'MAIN.ALGORITHMS.SMART_SPACING' | translate }}</span>
           </button>
 
           <button mat-menu-item (click)="onShuffle('weighted')" data-cy="shuffle-weighted">
             <mat-icon>trending_up</mat-icon>
-            <span>Weighted Random</span>
+            <span>{{ 'MAIN.ALGORITHMS.WEIGHTED_RANDOM' | translate }}</span>
           </button>
 
           <button mat-menu-item (click)="onShuffle('mood_based')" data-cy="shuffle-mood">
             <mat-icon>mood</mat-icon>
-            <span>Mood-Based Flow</span>
+            <span>{{ 'MAIN.ALGORITHMS.MOOD_BASED_FLOW' | translate }}</span>
           </button>
 
           <mat-divider></mat-divider>
@@ -128,23 +132,23 @@
           <div
             class="px-4 py-2 text-xs font-bold uppercase tracking-widest text-(--mat-sys-primary)"
           >
-            Reverse Algorithms
+            {{ 'MAIN.ALGORITHMS.REVERSE_ALGORITHMS' | translate }}
           </div>
 
           <button mat-menu-item (click)="onShuffle('reverse_playlist')" data-cy="shuffle-reverse">
             <mat-icon>flip</mat-icon>
-            <span>Reverse All</span>
+            <span>{{ 'MAIN.ALGORITHMS.REVERSE_ALL' | translate }}</span>
           </button>
 
           <button mat-menu-item [matMenuTriggerFor]="reverseMenu" data-cy="shuffle-reverse-menu">
             <mat-icon>swap_vert</mat-icon>
-            <span>Reverse Options</span>
+            <span>{{ 'MAIN.ALGORITHMS.REVERSE_OPTIONS' | translate }}</span>
             <mat-icon class="ml-auto">chevron_right</mat-icon>
           </button>
 
           <mat-menu #reverseMenu="matMenu">
             <div class="px-4 py-2 text-xs font-semibold text-(--mat-sys-on-surface-variant)">
-              Reverse Methods
+              {{ 'MAIN.ALGORITHMS.REVERSE_METHODS' | translate }}
             </div>
 
             <button
@@ -153,7 +157,7 @@
               data-cy="shuffle-reverse-artist"
             >
               <mat-icon>person</mat-icon>
-              <span>By Artist</span>
+              <span>{{ 'MAIN.ALGORITHMS.BY_ARTIST' | translate }}</span>
             </button>
 
             <button
@@ -162,7 +166,7 @@
               data-cy="shuffle-reverse-album"
             >
               <mat-icon>album</mat-icon>
-              <span>By Album</span>
+              <span>{{ 'MAIN.ALGORITHMS.BY_ALBUM' | translate }}</span>
             </button>
 
             <button
@@ -171,7 +175,7 @@
               data-cy="shuffle-reverse-pairs"
             >
               <mat-icon>compare_arrows</mat-icon>
-              <span>Swap Pairs</span>
+              <span>{{ 'MAIN.ALGORITHMS.SWAP_PAIRS' | translate }}</span>
             </button>
 
             <button
@@ -180,7 +184,7 @@
               data-cy="shuffle-reverse-chunks"
             >
               <mat-icon>view_column</mat-icon>
-              <span>By Chunks</span>
+              <span>{{ 'MAIN.ALGORITHMS.BY_CHUNKS' | translate }}</span>
             </button>
           </mat-menu>
 
@@ -189,17 +193,17 @@
           <div
             class="px-4 py-2 text-xs font-bold uppercase tracking-widest text-(--mat-sys-primary)"
           >
-            Advanced Algorithms
+            {{ 'MAIN.ALGORITHMS.ADVANCED_ALGORITHMS' | translate }}
           </div>
 
           <button mat-menu-item (click)="onShuffle('genre_based')" data-cy="shuffle-genre">
             <mat-icon>music_note</mat-icon>
-            <span>Genre Flow</span>
+            <span>{{ 'MAIN.ALGORITHMS.GENRE_FLOW' | translate }}</span>
           </button>
 
           <button mat-menu-item [matMenuTriggerFor]="tempoMenu" data-cy="shuffle-tempo-menu">
             <mat-icon>speed</mat-icon>
-            <span>By Tempo</span>
+            <span>{{ 'MAIN.ALGORITHMS.BY_TEMPO' | translate }}</span>
             <mat-icon class="ml-auto">chevron_right</mat-icon>
           </button>
 
@@ -209,19 +213,19 @@
             data-cy="shuffle-chrono-menu"
           >
             <mat-icon>event</mat-icon>
-            <span>By Date</span>
+            <span>{{ 'MAIN.ALGORITHMS.BY_DATE' | translate }}</span>
             <mat-icon class="ml-auto">chevron_right</mat-icon>
           </button>
         </mat-menu>
 
         <mat-menu #tempoMenu="matMenu">
           <div class="px-4 py-2 text-xs font-semibold text-(--mat-sys-on-surface-variant)">
-            Tempo-Based Shuffle
+            {{ 'MAIN.TEMPO.TITLE' | translate }}
           </div>
 
           <button mat-menu-item (click)="onShuffle('tempo_ascending')" data-cy="shuffle-tempo-asc">
             <mat-icon>trending_up</mat-icon>
-            <span>Energy Build-up</span>
+            <span>{{ 'MAIN.TEMPO.ENERGY_BUILD_UP' | translate }}</span>
           </button>
 
           <button
@@ -230,23 +234,23 @@
             data-cy="shuffle-tempo-desc"
           >
             <mat-icon>trending_down</mat-icon>
-            <span>Energy Cool-down</span>
+            <span>{{ 'MAIN.TEMPO.ENERGY_COOL_DOWN' | translate }}</span>
           </button>
 
           <button mat-menu-item (click)="onShuffle('tempo_wave')" data-cy="shuffle-tempo-wave">
             <mat-icon>waves</mat-icon>
-            <span>Energy Waves</span>
+            <span>{{ 'MAIN.TEMPO.ENERGY_WAVES' | translate }}</span>
           </button>
 
           <button mat-menu-item (click)="onShuffle('tempo_blocks')" data-cy="shuffle-tempo-blocks">
             <mat-icon>view_module</mat-icon>
-            <span>Tempo Blocks</span>
+            <span>{{ 'MAIN.TEMPO.TEMPO_BLOCKS' | translate }}</span>
           </button>
         </mat-menu>
 
         <mat-menu #chronologicalMenu="matMenu">
           <div class="px-4 py-2 text-xs font-semibold text-(--mat-sys-on-surface-variant)">
-            Chronological Shuffle
+            {{ 'MAIN.CHRONOLOGICAL.TITLE' | translate }}
           </div>
 
           <button
@@ -255,7 +259,7 @@
             data-cy="shuffle-chrono-new"
           >
             <mat-icon>new_releases</mat-icon>
-            <span>Newest First</span>
+            <span>{{ 'MAIN.CHRONOLOGICAL.NEWEST_FIRST' | translate }}</span>
           </button>
 
           <button
@@ -264,7 +268,7 @@
             data-cy="shuffle-chrono-old"
           >
             <mat-icon>history</mat-icon>
-            <span>Classics First</span>
+            <span>{{ 'MAIN.CHRONOLOGICAL.CLASSICS_FIRST' | translate }}</span>
           </button>
 
           <button
@@ -273,7 +277,7 @@
             data-cy="shuffle-chrono-decades"
           >
             <mat-icon>calendar_view_month</mat-icon>
-            <span>By Decades</span>
+            <span>{{ 'MAIN.CHRONOLOGICAL.BY_DECADES' | translate }}</span>
           </button>
 
           <button
@@ -282,7 +286,7 @@
             data-cy="shuffle-chrono-mixed"
           >
             <mat-icon>shuffle</mat-icon>
-            <span>Era Mix</span>
+            <span>{{ 'MAIN.CHRONOLOGICAL.ERA_MIX' | translate }}</span>
           </button>
         </mat-menu>
 
@@ -295,7 +299,7 @@
           [disabled]="(isAuthenticated$ | async) === false"
         >
           <mat-icon>playlist_add</mat-icon>
-          <span>Upload Playlist</span>
+          <span>{{ 'MAIN.BUTTONS.UPLOAD_PLAYLIST' | translate }}</span>
         </button>
       </div>
     </div>
@@ -311,12 +315,14 @@
             />
           }
           <div>
-            <div class="text-sm text-(--mat-sys-on-surface-variant)">Imported Playlist</div>
+            <div class="text-sm text-(--mat-sys-on-surface-variant)">
+              {{ 'MAIN.PLAYLIST.IMPORTED_PLAYLIST' | translate }}
+            </div>
             <div class="text-lg font-bold text-(--mat-sys-on-surface)" data-cy="playlist-name">
               {{ playlist.name }}
             </div>
             <div class="text-xs text-(--mat-sys-on-surface-variant)" data-cy="playlist-track-count">
-              {{ (currentTracks$ | async)?.length || 0 }} tracks
+              {{ (currentTracks$ | async)?.length || 0 }} {{ 'MAIN.PLAYLIST.TRACKS' | translate }}
             </div>
           </div>
         </div>
@@ -332,12 +338,12 @@
           @if (saving$ | async) {
             <div class="flex items-center gap-2" data-cy="save-progress">
               <mat-icon class="animate-spin">refresh</mat-icon>
-              <span>Saving...</span>
+              <span>{{ 'MAIN.BUTTONS.SAVING' | translate }}</span>
             </div>
           } @else {
             <div class="flex items-center gap-2">
               <mat-icon>save</mat-icon>
-              <span>Save to Spotify</span>
+              <span>{{ 'MAIN.BUTTONS.SAVE_TO_SPOTIFY' | translate }}</span>
             </div>
           }
         </button>
@@ -351,7 +357,7 @@
             >queue_music</mat-icon
           >
           <p class="text-(--mat-sys-on-surface-variant)">
-            No playlist imported. Click "Upload Playlist" to get started!
+            {{ 'MAIN.PLAYLIST.EMPTY_MESSAGE' | translate }}
           </p>
         </div>
       }
@@ -414,12 +420,12 @@
             @if (currentPlaylist$ | async; as playlist) {
               <button mat-menu-item (click)="onRemove(item.track, playlist)">
                 <mat-icon>delete</mat-icon>
-                <span>Remove from playlist</span>
+                <span>{{ 'MAIN.TRACK_MENU.REMOVE_FROM_PLAYLIST' | translate }}</span>
               </button>
             }
             <button mat-menu-item (click)="copyTrackLinkToClipboard(item.track)">
               <mat-icon>content_copy</mat-icon>
-              <span>Copy Link</span>
+              <span>{{ 'MAIN.TRACK_MENU.COPY_LINK' | translate }}</span>
             </button>
           </mat-menu>
         </div>

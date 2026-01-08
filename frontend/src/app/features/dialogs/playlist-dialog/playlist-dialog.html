@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Select playlist to import</h2>
+<h2 mat-dialog-title>{{ 'PLAYLIST_DIALOG.TITLE' | translate }}</h2>
 
 <mat-dialog-content>
   @if (playlists$ | async; as playlists) {
@@ -22,7 +22,11 @@
                   <div class="name">{{ playlist.name }}</div>
                   <div class="tracks">
                     {{ playlist.tracks.total }}
-                    {{ playlist.tracks.total === 1 ? 'track' : 'tracks' }}
+                    {{
+                      playlist.tracks.total === 1
+                        ? ('PLAYLIST_DIALOG.TRACK' | translate)
+                        : ('PLAYLIST_DIALOG.TRACKS' | translate)
+                    }}
                   </div>
                 </div>
               </div>
@@ -34,7 +38,7 @@
                 class="import-btn"
                 (click)="$event.stopPropagation(); import(playlist)"
               >
-                Import
+                {{ 'PLAYLIST_DIALOG.IMPORT' | translate }}
               </button>
             </div>
           </mat-expansion-panel-header>
@@ -42,10 +46,18 @@
           @if (playlist.tracks.total && playlist.tracks.items) {
             <div class="track-list">
               <div class="track-row header">
-                <div class="col index">#</div>
-                <div class="col title">Title</div>
-                <div class="col artist">Artist</div>
-                <div class="col duration">Duration</div>
+                <div class="col index">
+                  {{ 'PLAYLIST_DIALOG.COLUMNS.INDEX' | translate }}
+                </div>
+                <div class="col title">
+                  {{ 'PLAYLIST_DIALOG.COLUMNS.TITLE' | translate }}
+                </div>
+                <div class="col artist">
+                  {{ 'PLAYLIST_DIALOG.COLUMNS.ARTIST' | translate }}
+                </div>
+                <div class="col duration">
+                  {{ 'PLAYLIST_DIALOG.COLUMNS.DURATION' | translate }}
+                </div>
               </div>
 
               @for (item of playlist.tracks.items; track item.track.id; let i = $index) {
@@ -60,7 +72,9 @@
           }
 
           @if (playlist.tracks.total) {
-            <div class="no-tracks">No tracks loaded for this playlist yet.</div>
+            <div class="no-tracks">
+              {{ 'PLAYLIST_DIALOG.NO_TRACKS_LOADED' | translate }}
+            </div>
           }
         </mat-expansion-panel>
       }

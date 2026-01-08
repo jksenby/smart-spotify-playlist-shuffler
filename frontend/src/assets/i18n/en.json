@@ -1,0 +1,109 @@
+{
+  "LANG": {
+    "RU": "Русский Язык",
+    "EN": "English"
+  },
+  "MAIN": {
+    "USER": {
+      "DEFAULT_NAME": "User",
+      "LOGOUT": "Logout",
+      "LOGIN": "Login"
+    },
+    "HEADER": {
+      "PLAYLIST": "Playlist",
+      "TITLE": "Super Shuffler"
+    },
+    "BUTTONS": {
+      "SHUFFLE": "SHUFFLE",
+      "MIXING": "Mixing...",
+      "UPLOAD_PLAYLIST": "Upload Playlist",
+      "SAVE_TO_SPOTIFY": "Save to Spotify",
+      "SAVING": "Saving..."
+    },
+    "ALGORITHMS": {
+      "BASIC_ALGORITHMS": "Basic Algorithms",
+      "BASIC_SHUFFLE": "Basic Shuffle",
+      "BALANCED_ARTIST": "Balanced Artist",
+      "SMART_SPACING": "Smart Spacing",
+      "WEIGHTED_RANDOM": "Weighted Random",
+      "MOOD_BASED_FLOW": "Mood-Based Flow",
+      "REVERSE_ALGORITHMS": "Reverse Algorithms",
+      "REVERSE_ALL": "Reverse All",
+      "REVERSE_OPTIONS": "Reverse Options",
+      "REVERSE_METHODS": "Reverse Methods",
+      "BY_ARTIST": "By Artist",
+      "BY_ALBUM": "By Album",
+      "SWAP_PAIRS": "Swap Pairs",
+      "BY_CHUNKS": "By Chunks",
+      "ADVANCED_ALGORITHMS": "Advanced Algorithms",
+      "GENRE_FLOW": "Genre Flow",
+      "BY_TEMPO": "By Tempo",
+      "BY_DATE": "By Date"
+    },
+    "TEMPO": {
+      "TITLE": "Tempo-Based Shuffle",
+      "ENERGY_BUILD_UP": "Energy Build-up",
+      "ENERGY_COOL_DOWN": "Energy Cool-down",
+      "ENERGY_WAVES": "Energy Waves",
+      "TEMPO_BLOCKS": "Tempo Blocks"
+    },
+    "CHRONOLOGICAL": {
+      "TITLE": "Chronological Shuffle",
+      "NEWEST_FIRST": "Newest First",
+      "CLASSICS_FIRST": "Classics First",
+      "BY_DECADES": "By Decades",
+      "ERA_MIX": "Era Mix"
+    },
+    "PLAYLIST": {
+      "IMPORTED_PLAYLIST": "Imported Playlist",
+      "TRACKS": "tracks",
+      "EMPTY_MESSAGE": "No playlist imported. Click \"Upload Playlist\" to get started!"
+    },
+    "TRACK_MENU": {
+      "REMOVE_FROM_PLAYLIST": "Remove from playlist",
+      "COPY_LINK": "Copy Link"
+    },
+    "NOTIFICATIONS": {
+      "SHUFFLED_WITH": "Playlist shuffled using {{algorithm}} algorithm!",
+      "SAVED": "Playlist {{name}} saved to Spotify!",
+      "UPLOADED": "{{name}} uploaded!",
+      "ERROR": "Something went wrong",
+      "COPIED_TO_CLIPBOARD": "Copied to Clipboard",
+      "CLOSE": "Close"
+    },
+    "ALGORITHM_NAMES": {
+      "BASIC_SHUFFLE": "Basic Shuffle",
+      "BALANCED_ARTIST": "Balanced Artist",
+      "SMART_SPACING": "Smart Spacing",
+      "WEIGHTED": "Weighted Random",
+      "MOOD_BASED": "Mood-Based Flow",
+      "REVERSE_PLAYLIST": "Reverse All",
+      "REVERSE_BY_ARTIST": "Reverse by Artist",
+      "REVERSE_BY_ALBUM": "Reverse by Album",
+      "REVERSE_PAIRS": "Swap Pairs",
+      "REVERSE_CHUNKS": "Reverse by Chunks",
+      "GENRE_BASED": "Genre Flow",
+      "TEMPO_ASCENDING": "Energy Build-up",
+      "TEMPO_DESCENDING": "Energy Cool-down",
+      "TEMPO_WAVE": "Energy Waves",
+      "TEMPO_BLOCKS": "Tempo Blocks",
+      "CHRONOLOGICAL_NEWEST": "Newest First",
+      "CHRONOLOGICAL_OLDEST": "Classics First",
+      "CHRONOLOGICAL_DECADES": "By Decades",
+      "CHRONOLOGICAL_MIXED": "Era Mix"
+    }
+  },
+  "PLAYLIST_DIALOG": {
+    "TITLE": "Select playlist to import",
+    "IMPORT": "Import",
+    "TRACK": "track",
+    "TRACKS": "tracks",
+    "COLUMNS": {
+      "INDEX": "#",
+      "TITLE": "Title",
+      "ARTIST": "Artist",
+      "DURATION": "Duration"
+    },
+    "NO_TRACKS_LOADED": "No tracks loaded for this playlist yet."
+  }
+}
