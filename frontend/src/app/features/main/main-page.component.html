@@ -11,7 +11,7 @@
         @if ((user$ | async)?.images; as images) {
           <img
             data-cy="user-avatar"
-            [src]="images[0].url"
+            [src]="images[0]?.url ?? '../../../assets/user-icon.png'"
             alt="User avatar"
             class="w-8 h-8 rounded-full object-cover"
           />
