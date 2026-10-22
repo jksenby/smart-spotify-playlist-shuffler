@@ -16,9 +16,11 @@ PostgreSQL, OAuth credentials and the frontend are not required for unit tests.
 - The existing GitHub Actions backend workflow now also runs unit tests.
 - Local Jenkins configuration in infra/jenkins.
 
-Verification so far: all 16 tests passed locally. Docker image builds and Jenkins
-execution have NOT been verified yet. Do not present this file as proof of a
-successful Jenkins run.
+Verification on 2026-10-22: all 16 tests passed in the Docker test image. The
+runtime image built successfully and its algorithm smoke test passed. The user
+provided a screenshot of successful Jenkins build #3 (9.5 seconds), revision
+692b59a82ac2ed3da77fddd0217b02adb7b185b6, with unit-tests.log archived. This
+was a manual run; an automatic run after a pushed change still needs evidence.
 
 ## 1. Local tests
 
@@ -201,3 +203,17 @@ JENKINS_HOME/network-ca-bundle.pem and exports GIT_SSL_CAINFO for Jenkins and it
 Git subprocesses. HTTPS verification stays enabled. Rebuild/recreate the Jenkins
 service with the command above, reload the job configuration and retry the
 repository URL. Existing jobs and plugins remain in the Jenkins home volume.
+
+## Docker build reports that --mount requires BuildKit
+
+If tests pass but the runtime build fails with `the --mount option requires
+BuildKit`, rebuild the local Jenkins service:
+
+```powershell
+docker compose -f infra/jenkins/compose.yaml up -d --build
+docker compose -f infra/jenkins/compose.yaml exec jenkins docker buildx version
+```
+
+The Jenkins Dockerfile copies the Buildx plugin alongside the Docker CLI and sets
+`DOCKER_BUILDKIT=1`. The existing Jenkins home volume preserves jobs and settings.
+After Jenkins finishes restarting, use Build Now to retry the pipeline.

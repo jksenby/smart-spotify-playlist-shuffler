@@ -1,0 +1,39 @@
+# Practical Report: Docker and Jenkins CI
+
+Super Shuffler | Assignment 5 | 22 October 2026
+
+## 1. Objective and implementation
+
+The objective was to automate verification and containerization of the Python playlist algorithm layer. The project is stored at https://github.com/jksenby/smart-spotify-playlist-shuffler, branch main. The verified Jenkins build used revision 692b59a82ac2ed3da77fddd0217b02adb7b185b6. Tests use synthetic inputs and mocked Spotify responses, allowing execution without database services or Spotify credentials.
+
+The backend Dockerfile provides test and runtime stages based on Python 3.11. Sixteen unittest tests cover track preservation, duplicates, artist balancing, ordering, invalid inputs, zero popularity weights, API request batching, and service failures. The runtime smoke test checks that reverse_pairs([1, 2, 3]) produces [2, 1, 3].
+
+Jenkins was deployed locally through infra/jenkins/compose.yaml with persistent home storage and access to the Docker daemon. A Pipeline job named spotify-assignment5 loads Jenkinsfile from Git, using branch */main. Its stages are Checkout, Unit tests, Build Docker image, and Smoke test. Test logs are archived even when a run fails.
+
+## 2. Execution and troubleshooting
+
+Local verification used scripts/verify-assignment5.ps1 to build the test image, run all sixteen tests, build the runtime image, check the packaged algorithm, and start Jenkins. In Jenkins build #1, checkout and tests succeeded, but the runtime build failed with “the --mount option requires BuildKit”. The Jenkins image contained Docker CLI without the Buildx plugin, causing a fallback to the legacy builder.
+
+The fix copies docker-buildx from the official Docker CLI image into the Jenkins image and sets DOCKER_BUILDKIT=1. Jenkins was rebuilt with docker compose -f infra/jenkins/compose.yaml up -d --build. Its existing home volume retained the job and settings. A runtime build executed from the Jenkins container then succeeded. The updated infrastructure Dockerfile must also be committed and pushed so that this fix is reproducible from the repository.
+
+---
+
+## 3. Observed result and evidence
+
+The supplied Jenkins screenshot shows build #3 completed successfully in 9.5 seconds. It identifies branch main, revision 692b59a82ac2ed3da77fddd0217b02adb7b185b6, and an archived unit-tests.log artifact of 2.43 KiB. The build was started manually by user admin. The earlier console log records sixteen passing tests; the successful build screenshot confirms the later pipeline completed.
+
+[Insert screenshot 1: supplied Jenkins build #3 page showing success, revision and unit-tests.log.]
+
+Figure 1. Successful Jenkins build #3 and retained test-log artifact.
+
+[Insert screenshot 2: build #3 Console Output showing “Ran 16 tests”, “OK”, the smoke-test result and “Finished: SUCCESS”; use Pipeline Steps as additional evidence if needed.]
+
+Figure 2. Console evidence of tests, packaging and the runtime smoke test.
+
+## 4. Automation, limitations and conclusion
+
+The Jenkinsfile configures SCM polling approximately every two minutes. Automatic detection of a new pushed commit still needs a separate observed run; the screenshot documents a manual run with no changes. To complete that evidence, push a reviewed change, wait for polling, and capture the build cause and new revision. Several commits pushed together may share one run.
+
+The implemented CI verifies the algorithm layer and produces a local runtime image. It does not validate the complete API, PostgreSQL integration, live Spotify OAuth, or the frontend. Docker Hub publishing and Kubernetes deployment were optional and were not performed. The practical result demonstrates a working Jenkins pipeline and shows why build tools must be included in the reproducible environment alongside application dependencies.
+
+Submission evidence: repository and Jenkinsfile at the URL above; successful build screenshot; console screenshot and unit-tests.log. Local build URL: http://localhost:8080/job/spotify-assignment5/3/ (accessible on the author’s computer).
