@@ -192,3 +192,12 @@ This recreates the container using its existing Jenkins home volume, preserving
 setup progress and jobs. Wait for startup, reload http://localhost:8080 and choose
 Retry for the failed plugins. If downloads still fail, inspect their error details
 or run docker compose -f infra/jenkins/compose.yaml logs --tail 100 jenkins.
+
+## GitHub checkout reports certificate signer not trusted
+
+Git uses a separate CA bundle from Java. The startup wrapper now combines the
+container's public CA bundle and the mounted network CA in
+JENKINS_HOME/network-ca-bundle.pem and exports GIT_SSL_CAINFO for Jenkins and its
+Git subprocesses. HTTPS verification stays enabled. Rebuild/recreate the Jenkins
+service with the command above, reload the job configuration and retry the
+repository URL. Existing jobs and plugins remain in the Jenkins home volume.
