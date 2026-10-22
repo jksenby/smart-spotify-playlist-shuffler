@@ -108,3 +108,13 @@ On regular `git commit`, pre-commit runs automatically for the files included in
 ## Security Note
 
 The current backend implementation uses a placeholder `SECRET_KEY` in `main.py`. For production use, this key **must** be moved to an environment variable (`.env` or similar) for security.
+
+## Assignment 5: Docker and Jenkins
+
+The backend includes offline unit tests and a Jenkins pipeline for the playlist
+algorithms. See [setup and submission instructions](docs/assignment-5.md).
+
+```powershell
+cd backend
+python -m unittest discover -s tests -v
+```

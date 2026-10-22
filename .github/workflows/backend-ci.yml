@@ -26,6 +26,10 @@ jobs:
         cache: 'pip'
         cache-dependency-path: 'backend/requirements.txt'
 
+    - name: Run offline unit tests
+      working-directory: ./backend
+      run: python -m unittest discover -s tests -v
+
     - name: Install dependencies
       working-directory: ./backend
       run: |

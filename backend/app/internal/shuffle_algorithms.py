@@ -1,6 +1,5 @@
-from ast import List
 import random
-from typing import Any, Dict
+from typing import Any, Dict, List
 from collections import defaultdict
 
 
@@ -98,7 +97,11 @@ def weighted_shuffle(tracks: List[Dict[str, any]], weight_key='popularity'):
     shuffled_indices = []
 
     while indices:
-        chosen_idx = random.choices(indices, weights=[probabilities[i] for i in indices])[0]
+        remaining_weights = [probabilities[i] for i in indices]
+        if sum(remaining_weights) > 0:
+            chosen_idx = random.choices(indices, weights=remaining_weights)[0]
+        else:
+            chosen_idx = random.choice(indices)
         shuffled_indices.append(chosen_idx)
         indices.remove(chosen_idx)
 

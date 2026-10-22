@@ -32,3 +32,10 @@ frontend/src/environments/environment.development.ts
 
 *.pyc
 ssl-certificates/
+
+# Local Python environments and CI output
+backend/.venv/
+backend/test-results/
+test-results/
+backend/certs/*.pem
+backend/certs/*.crt
